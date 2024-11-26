@@ -10,7 +10,7 @@ using std::vector;
 using namespace std;
 
 // Constructor
-Settlement::Settlement(const string &name, SettlementType type) : name(name), type(type) {}
+Settlement::Settlement(string &name, SettlementType type) : name(name), type(type) {}
 
 const string& Settlement::getName() const {
     return name;
