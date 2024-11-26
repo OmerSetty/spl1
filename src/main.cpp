@@ -1,5 +1,6 @@
 // #include "Simulation.h"
 #include <iostream>
+#include <Settlement.h>
 
 using namespace std;
 
@@ -7,6 +8,8 @@ using namespace std;
 
 int main(int argc, char** argv){
     cout << "Hello World!5" << endl;
+    const string s = "123";
+    Settlement set(s, SettlementType(0));
 
     // if(argc!=2){
     //     cout << "usage: simulation <config_path>" << endl;
