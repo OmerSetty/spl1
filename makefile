@@ -12,23 +12,18 @@ all: hello
 
 
 hello: clean bin/main.o 
-
 	
-
-	
-
-	g++ -o bin/main bin/main.o
-
+	# g++ -o bin/main bin/main.o
+	g++ -o bin/main bin/main.o bin/Settlement.o
 	
 	./bin/main
-	
-
 
 # Depends on the source and header files
 
 bin/main.o: src/main.cpp
 
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/main.o src/main.cpp
+	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Settlement.o src/Settlement.cpp
 
 
 # Depends on the source and header files
