@@ -22,18 +22,18 @@ class NaiveSelection: public SelectionPolicy {
         int lastSelectedIndex;
 };
 
-// class BalancedSelection: public SelectionPolicy {
-//     public:
-//         BalancedSelection(int LifeQualityScore, int EconomyScore, int EnvironmentScore);
-//         const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
-//         const string toString() const override;
-//         BalancedSelection *clone() const override;
-//         ~BalancedSelection() override = default;
-//     private:
-//         int LifeQualityScore;
-//         int EconomyScore;
-//         int EnvironmentScore;
-// };
+class BalancedSelection: public SelectionPolicy {
+    public:
+        BalancedSelection(int LifeQualityScore, int EconomyScore, int EnvironmentScore);
+        const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
+        const string toString() const override;
+        // BalancedSelection *clone() const override;
+        // ~BalancedSelection() override = default;
+    private:
+        int LifeQualityScore;
+        int EconomyScore;
+        int EnvironmentScore;
+};
 
 class EconomySelection: public SelectionPolicy {
     public:
