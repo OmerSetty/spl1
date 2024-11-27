@@ -9,10 +9,6 @@ using std::string;
 using std::vector;
 using namespace std;
 
-SettlementType VILLAGE = SettlementType::VILLAGE;
-SettlementType CITY = SettlementType::CITY;
-SettlementType METROPOLIS = SettlementType::METROPOLIS;
-
 // Constructor
 Settlement::Settlement(const string &newName, SettlementType newType) : 
                         name(newName), type(newType) {}

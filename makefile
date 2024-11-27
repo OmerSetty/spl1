@@ -13,7 +13,6 @@ all: hello
 
 hello: clean bin/main.o 
 	
-	# g++ -o bin/main bin/main.o
 	g++ -o bin/main bin/main.o bin/Settlement.o
 	
 	./bin/main
