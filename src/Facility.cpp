@@ -16,27 +16,27 @@ FacilityType:: FacilityType(const string &name, const FacilityCategory category,
     name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score){}
 
 // Methods
-const string& FacilityType:: getName() {
+const string& FacilityType:: getName() const {
     return name;
 }
 
-int Facility:: getCost() const {
+int FacilityType:: getCost() const {
     return price;
 }
 
-int Facility:: getLifeQualityScore() const {
+int FacilityType:: getLifeQualityScore() const {
     return lifeQuality_score;
 }
 
-int Facility:: getEnvironmentScore() const {
+int FacilityType:: getEnvironmentScore() const {
     return environment_score;
 }
 
-int Facility:: getEconomyScore() const {
+int FacilityType:: getEconomyScore() const {
     return economy_score;
 }
 
-int Facility:: getCategory() const {
+FacilityCategory FacilityType:: getCategory() const {
     return category;
 }
 
@@ -44,17 +44,16 @@ int Facility:: getCategory() const {
 // Constructors
 // Parameterized
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score) : 
-    FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score), settlementName(settlementName), status(UNDER_CONSTRUCTIONS), timeLeft(price) {}
+    FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score), settlementName(settlementName), status(FacilityStatus:: UNDER_CONSTRUCTIONS), timeLeft(price) {}
 
 // Partial
 Facility:: Facility(FacilityType &type, const string &settlementName) :
-    Facility(type.name, settlementName, type.category, type.price, type.lifeQuality_score, type.economy_score, type.environment_score) {}
-
+    Facility(type.getName(), getSettlementName(), type.getCategory(), type.getCost(), type.getLifeQualityScore(), type.getEconomyScore(), type.getEnvironmentScore()) {}
 
 const string& Facility::getSettlementName() const {
     return settlementName;
 }
-int Facility::getTimeLeft() const {
+const int Facility::getTimeLeft() const {
     return timeLeft;
 }
 void Facility::setStatus(FacilityStatus status) {
@@ -64,11 +63,12 @@ const FacilityStatus& Facility::getStatus() const {
     return status;
 }
 // NOT SURE - how to treat the enum
-void Facility::step() {
-    if (getStatus() == UNDER_CONSTRUCTIONS) {
+FacilityStatus Facility::step() {
+    if (getStatus() == FacilityStatus:: UNDER_CONSTRUCTIONS) {
         timeLeft--;
-        if (timeLeft == 0) setStatus(OPERATIONAL);
+        if (timeLeft == 0) setStatus(FacilityStatus:: OPERATIONAL);
     }
+    return getStatus();
 }
 
 // NOT SURE - how to implement methods like
