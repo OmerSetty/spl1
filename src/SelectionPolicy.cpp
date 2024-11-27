@@ -3,6 +3,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <climits>
 
 #include "Facility.h"
 #include "SelectionPolicy.h"
@@ -11,49 +12,53 @@ using std::string;
 using std::vector;
 using namespace std;
 
-NaiveSelection::NaiveSelection() : lastSelectedIndex(0) {}
 
-const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
-    // FacilityType& facility = facilitiesOptions[lastSelectedIndex];
-    // lastSelectedIndex++;
-    // return facility;
-    
-    int currentIndex = lastSelectedIndex; 
-    lastSelectedIndex++;
-    // MAKE SURE: Do we need to return a reference? and why?
-    return facilitiesOptions[currentIndex];
+BalancedSelection::BalancedSelection(int currLifeQualityScore, int currEconomyScore, int currEnvironmentScore) 
+    LifeQualityScore(currLifeQualityScore), EconomyScore(currEconomyScore), EnvironmentScore(currEnvironmentScore): {}
+
+const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
+    int min = INT_MAX;
+    int index = 0;
+    for (int i=0; i<facilitiesOptions.size(); i++) {
+        int improvedLQScore = LifeQualityScore + facilitiesOptions[i].getLifeQualityScore();
+        int improvedEcoScore = EconomyScore + facilitiesOptions[i].getEconomyScore();
+        int improvedEnvScore = EnvironmentScore + facilitiesOptions[i].getEnvironmentScore();
+        int distance = distanceCalculator(improvedLQScore, improvedEcoScore, improvedEnvScore);
+        if(distance < min){
+            min = distance;
+            index = i;
+        }
+    }
+    return facilitiesOptions[index];
 }
-// TODO? (Not in assignment)
-const string NaiveSelection::toString() const {
-    return to_string(lastSelectedIndex);
+
+const string BalancedSelection:: toString() {
+    cout << "Balanced selection toString. DONT FORGET TO IMPLEMENT THE DESTRUCTOR AND THE CLONE METHOD!!!"
 }
-// // TODO? (Not in assignment)
-// NaiveSelection* NaiveSelection::clone() {}
-// // TODO
-// NaiveSelection::~NaiveSelection() {}
 
-// BalancedSelection::BalancedSelection(int newLifeQualityScore, int newEconomyScore, int newEnvironmentScore) 
-//     LifeQualityScore(newLifeQualityScore), EconomyScore(newEconomyScore), EnvironmentScore(newEnvironmentScore): {}
+public int distanceCalculator (int lifeQualityScore, economyScore, environmentScore) {
+    int max(lifeQualityScore);
+    if(economyScore > max) max(economyScore);
+    if(environmentScore > max) max(environmentScore);
+    int min(lifeQualityScore);
+    if(economyScore < min) min(economyScore);
+    if(environmentScore < min) min(environmentScore);
+    return max-min;
+}
 
-// const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
-//     for (int i=0; i<facilitiesOptions.size(); i++) {
-//         FacilityType& facility = facilitiesOptions[i];
-//         // int lifeQualityScore = facility.getLifeQualityScore();
-//         // int environmentScore = facility.getEnvironmentScore();
-//         // int economyScore = facility.getEconomyScore();
-//         // if ((lifeQualityScore - environmentScore == 1 || lifeQualityScore - environmentScore == -1) &&
-//         //     (environmentScore - economyScore == 1 || environmentScore - economyScore == -1) &&
-//         //     (lifeQualityScore - economyScore == 1 || lifeQualityScore - economyScore == -1)) {
-//         //     return facility;
-//         // }
-//         cout << facility.getLifeQualityScore() << endl; 
-//     }
-// }
 
-// // TODO? (Not in assignment)
-// const string NaiveSelection::toString() {}
-// // TODO? (Not in assignment)
-// NaiveSelection* NaiveSelection::clone() {}
-// // TODO
-// NaiveSelection::~NaiveSelection() {}
+    for (int i=0; i<facilitiesOptions.size(); i++) {
+    //     FacilityType& facility = facilitiesOptions[i];
+    //     int lifeQualityScore = facility.getLifeQualityScore();
+    //     int environmentScore = facility.getEnvironmentScore();
+    //     int economyScore = facility.getEconomyScore();
+    //     if ((lifeQualityScore - environmentScore == 1 || lifeQualityScore - environmentScore == -1) &&
+    //         (environmentScore - economyScore == 1 || environmentScore - economyScore == -1) &&
+    //         (lifeQualityScore - economyScore == 1 || lifeQualityScore - economyScore == -1)) {
+    //         return facility;
+    //     }
+    //     cout << facility.getLifeQualityScore() << endl; 
+    // }
+}
+
 
