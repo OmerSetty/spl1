@@ -12,20 +12,32 @@ enum class PlanStatus {
 
 class Plan {
     public:
+    // Given methods
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
+        void setStatus(PlanStatus status);
         void step();
         void printStatus();
         const vector<Facility*> &getFacilities() const;
         void addFacility(Facility* facility);
         const string toString() const;
 
+    // // Our new methods
+    //     // Copy Counstructor
+    //     Plan(Plan& other);
+    //     // Destructor
+    //     ~Plan();
+    //     // Assignment Opertaor
+    //     Plan& Opertaor=(const Plan& other); // maybe should be void?
+    //     // Move Constructor
+        const SelectionPolicy& getSelectionPolicy() const;
+        bool hasLeftCapacity();
     private:
         int plan_id;
-        Settlement &settlement;
+        const Settlement &settlement;
         SelectionPolicy *selectionPolicy; //What happens if we change this to a reference?
         PlanStatus status;
         vector<Facility*> facilities;

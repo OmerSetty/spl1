@@ -41,9 +41,9 @@ int main(int argc, char** argv){
     cout << bs.selectFacility(facilitiesOptions).getName() << endl;
     cout << bs.selectFacility(facilitiesOptions).getName() << endl;
 
-    vector<Facility*> underConstruction = { new Facility(facilityT, s), new Facility(facilityT1, s), new Facility(facilityT2, s) };
-    Plan p1 = new Plan(100, settlement, new NaiveSelection(), facilitiesOptions);
-    
+    vector<Facility*> underConstruction = { new Facility(facilityT, s), new Facility(facilityT2, s), new Facility(facilityT3, s) };
+    Plan* p1 = new Plan(100, settlement, new NaiveSelection(), facilitiesOptions);
+
 
     // cout << ss.selectFacility(facilitiesOptions).getName() << endl;
 

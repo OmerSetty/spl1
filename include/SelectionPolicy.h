@@ -14,9 +14,9 @@ class SelectionPolicy {
 class NaiveSelection: public SelectionPolicy {
     public:
         NaiveSelection();
-        const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
-        const string toString() const override;
-        // NaiveSelection *clone() const override;
+        virtual const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
+        virtual const string toString() const override;
+        // virtual NaiveSelection *clone() const override;
         // ~NaiveSelection() override = default;
     private:
         int lastSelectedIndex;
@@ -25,9 +25,9 @@ class NaiveSelection: public SelectionPolicy {
 class BalancedSelection: public SelectionPolicy {
     public:
         BalancedSelection(int LifeQualityScore, int EconomyScore, int EnvironmentScore);
-        const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
-        const string toString() const override;
-        // BalancedSelection *clone() const override;
+        virtual const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
+        virtual const string toString() const override;
+        // virtual BalancedSelection *clone() const override;
         // ~BalancedSelection() override = default;
     private:
         int LifeQualityScore;
@@ -38,9 +38,9 @@ class BalancedSelection: public SelectionPolicy {
 class EconomySelection: public SelectionPolicy {
     public:
         EconomySelection();
-        const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
-        const string toString() const override;
-        // EconomySelection *clone() const override;
+        virtual const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
+        virtual const string toString() const override;
+        // virtual EconomySelection *clone() const override;
         // ~EconomySelection() override = default;
     private:
         int lastSelectedIndex;
@@ -49,9 +49,9 @@ class EconomySelection: public SelectionPolicy {
 class SustainabilitySelection: public SelectionPolicy {
     public:
         SustainabilitySelection();
-        const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
-        const string toString() const override;
-        // SustainabilitySelection *clone() const override;
+        virtual const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override;
+        virtual const string toString() const override;
+        // virtual SustainabilitySelection *clone() const override;
         // ~SustainabilitySelection() override = default;
     private:
         int lastSelectedIndex;

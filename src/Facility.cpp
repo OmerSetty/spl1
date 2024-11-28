@@ -47,7 +47,7 @@ Facility::Facility(const string &name, const string &settlementName, const Facil
     FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score), settlementName(settlementName), status(FacilityStatus:: UNDER_CONSTRUCTIONS), timeLeft(price) {}
 
 // Partial
-Facility:: Facility(FacilityType &type, const string &settlementName) :
+Facility:: Facility(const FacilityType &type, const string &settlementName) :
     Facility(type.getName(), getSettlementName(), type.getCategory(), type.getCost(), type.getLifeQualityScore(), type.getEconomyScore(), type.getEnvironmentScore()) {}
 
 const string& Facility::getSettlementName() const {
