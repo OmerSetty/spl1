@@ -4,6 +4,7 @@
 #include <../include/Settlement.h>
 #include <../include/Facility.h>
 #include <../include/SelectionPolicy.h>
+#include <../include/Plan.h>
 #include <climits>
 
 using namespace std;
@@ -39,6 +40,11 @@ int main(int argc, char** argv){
     cout << bs.selectFacility(facilitiesOptions).getName() << endl;
     cout << bs.selectFacility(facilitiesOptions).getName() << endl;
     cout << bs.selectFacility(facilitiesOptions).getName() << endl;
+
+    vector<Facility*> underConstruction = { new Facility(facilityT, s), new Facility(facilityT1, s), new Facility(facilityT2, s) };
+    Plan p1 = new Plan(100, settlement, new NaiveSelection(), facilitiesOptions);
+    
+
     // cout << ss.selectFacility(facilitiesOptions).getName() << endl;
 
     // if(argc!=2){
