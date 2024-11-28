@@ -12,6 +12,7 @@ enum class PlanStatus {
 
 class Plan {
     public:
+    // Given methods
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
@@ -23,6 +24,16 @@ class Plan {
         void addFacility(Facility* facility);
         const string toString() const;
 
+    // // Our new methods
+    //     // Copy Counstructor
+    //     Plan(Plan& other);
+    //     // Destructor
+    //     ~Plan();
+    //     // Assignment Opertaor
+    //     Plan& Opertaor=(const Plan& other); // maybe should be void?
+    //     // Move Constructor
+        const 
+        const SelectionPolicy& getSelectionPolicy() const;
     private:
         int plan_id;
         Settlement &settlement;
