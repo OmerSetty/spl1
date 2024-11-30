@@ -12,12 +12,21 @@ using std::string;
 using std::vector;
 using namespace std;
 
+// Increase Index - Increases the index if possible,
+// or resets it to 0 if we gor to the end of the vector
+int SelectionPolicy:: increaseIndex(int currIndex, int facilitiesOptionsSize) {
+    currIndex += 1;
+    if(currIndex >= facilitiesOptionsSize)
+        currIndex = 0;
+    return currIndex;
+}
+
 // NaiveSelection implementations 
 NaiveSelection::NaiveSelection() : lastSelectedIndex(0) {}
 
 const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     int currentIndex = lastSelectedIndex; 
-    lastSelectedIndex++;
+    lastSelectedIndex = increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
 
@@ -31,7 +40,7 @@ const string NaiveSelection:: toString() const {
 // // TODO
 // NaiveSelection::~NaiveSelection() {}
 
-int distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore) {
+int SelectionPolicy:: distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore) {
     int max = lifeQualityScore;
     if(economyScore > max) max = economyScore;
     if(environmentScore > max) max = environmentScore;
@@ -71,10 +80,10 @@ EconomySelection::EconomySelection() : lastSelectedIndex(0) {}
 
 const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     while (facilitiesOptions[lastSelectedIndex].getCategory() != FacilityCategory::ECONOMY) {
-        lastSelectedIndex++;
+        lastSelectedIndex = increaseIndex(lastSelectedIndex, facilitiesOptions.size());
     }
     int currentIndex = lastSelectedIndex; 
-    lastSelectedIndex++;
+    increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
 // TODO? (Not in assignment)
@@ -94,11 +103,11 @@ const string EconomySelection::toString() const {
 SustainabilitySelection::SustainabilitySelection() : lastSelectedIndex(0) {}
 
 const FacilityType& SustainabilitySelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
-    while (facilitiesOptions[lastSelectedIndex].getCategory() != FacilityCategory::ENVIRONMENT) {
-        lastSelectedIndex++;
+    while (facilitiesOptions[lastSelectedIndex].getCategory() != FacilityCategory::ECONOMY) {
+        lastSelectedIndex = increaseIndex(lastSelectedIndex, facilitiesOptions.size());
     }
     int currentIndex = lastSelectedIndex; 
-    lastSelectedIndex++;
+    increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
 // TODO? (Not in assignment)
