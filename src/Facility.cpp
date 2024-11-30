@@ -56,8 +56,8 @@ const string& Facility::getSettlementName() const {
 const int Facility::getTimeLeft() const {
     return timeLeft;
 }
-void Facility::setStatus(FacilityStatus status) {
-    status = status;
+void Facility::setStatus(FacilityStatus newStatus) {
+    status = newStatus;
 }
 const FacilityStatus& Facility::getStatus() const {
     return status;
@@ -66,13 +66,23 @@ const FacilityStatus& Facility::getStatus() const {
 FacilityStatus Facility::step() {
     if (getStatus() == FacilityStatus:: UNDER_CONSTRUCTIONS) {
         timeLeft--;
-        if (timeLeft == 0) setStatus(FacilityStatus:: OPERATIONAL);
+        cout << "timeleft: " + to_string(timeLeft) << endl;
+        if (timeLeft == 0) {
+            cout << "finished" << endl;
+            setStatus(FacilityStatus:: OPERATIONAL);
+        }
     }
     return getStatus();
+}
+
+string getStatusAsString (FacilityStatus status) {
+    if (status == FacilityStatus::UNDER_CONSTRUCTIONS) return "UNDER_CONSTRUCTIONS";
+    if (status == FacilityStatus::OPERATIONAL) return "OPERATIONAL";
 }
 
 // NOT SURE - how to implement methods like
 // that (that has no details in the guide) 
 const string Facility::toString() const {
-    return "name: " + getName();
+    return "name: " + getName() + " status: " + getStatusAsString(getStatus()) + " timeLeft: " + to_string(getTimeLeft());
 }
+
