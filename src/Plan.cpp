@@ -82,6 +82,13 @@ const SelectionPolicy& Plan:: getSelectionPolicy() const {
     return *selectionPolicy;
 }
 
+const int Plan:: getPlanID() const {
+    return plan_id;
+}
+
+const Settlement& Plan:: getSettlment() const {
+    return settlement;
+}
 
 const string Plan:: toString() const {
     return "Plan.toString() returns the plan's id for now: " + to_string(plan_id);

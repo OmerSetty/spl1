@@ -54,7 +54,7 @@ class AddPlan : public BaseAction {
 class AddSettlement : public BaseAction {
     public:
         AddSettlement(const string &settlementName,SettlementType settlementType);
-        void act(Simulation &simulation) override;
+        void act(Simulation &simulation) override;  // print from this action
         AddSettlement *clone() const override;
         const string toString() const override;
     private:

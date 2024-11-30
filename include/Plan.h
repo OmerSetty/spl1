@@ -12,11 +12,12 @@ enum class PlanStatus {
 
 class Plan {
     public:
-    // Given methods
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;
+        const int getPlanID() const;
+        const Settlement& getSettlment() const;
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
         void setStatus(PlanStatus status);
         void step();
