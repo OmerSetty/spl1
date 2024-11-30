@@ -5,6 +5,7 @@
 #include <../include/Facility.h>
 #include <../include/SelectionPolicy.h>
 #include <../include/Plan.h>
+#include <../include/Simulation.h>
 #include <climits>
 
 using namespace std;
@@ -12,12 +13,12 @@ using namespace std;
 // Simulation* backup = nullptr;
 
 int main(int argc, char** argv){
-    cout << "Hello World!5" << endl;
+    // cout << "Hello World!5" << endl;
     
 
     const string s = "abc";
     Settlement settlement = Settlement(s, SettlementType::METROPOLIS);
-    cout << settlement.getName() << endl;
+    // cout << settlement.getName() << endl;
                                                                               // 1, 1, 2         
     FacilityType facilityT = FacilityType("setty", FacilityCategory::ECONOMY, 20, 3, 7, 5);//4,8,7=3
     FacilityType facilityT2 = FacilityType("setty2", FacilityCategory::ENVIRONMENT, 3, 6, 4, 6);//7,5,8=3
@@ -30,7 +31,7 @@ int main(int argc, char** argv){
         FacilityCategory::LIFE_QUALITY, 10, 3, 5, 2);
     Facility facility2 = Facility("def", settlement.getName(),
         FacilityCategory::LIFE_QUALITY, 10, 3, 5, 2);
-    cout << facility.toString() << endl;
+    // cout << facility.toString() << endl;
     
     vector<FacilityType> facilitiesOptions = { facilityT, facilityT2, facilityT3,
         facilityT4, facilityT5, facilityT6 };
@@ -41,31 +42,33 @@ int main(int argc, char** argv){
     // cout << bs.selectFacility(facilitiesOptions).getName() << endl;
     // cout << bs.selectFacility(facilitiesOptions).getName() << endl;
 
-    Plan* p1 = new Plan(100, settlement, new NaiveSelection(), facilitiesOptions);
-    cout << (*p1).toString() << endl;
-    cout << (*p1).getEconomyScore() << endl;
-    cout << "step 1:" << endl;
-    (*p1).step();
-    cout << "step 2:" << endl;
-    (*p1).step();
-    (*p1).setSelectionPolicy(new SustainabilitySelection());
-    cout << "step 3:" << endl;
-    (*p1).step();
-    cout << "step 4:" << endl;
-    (*p1).step();
-    cout << "step 5:" << endl;
-    (*p1).step();
-    cout << "step 6:" << endl;
-    (*p1).step();
+    // Plan p1 = Plan(100, settlement, new NaiveSelection(), facilitiesOptions);
+    // cout << p1.toString() << endl;
+    // cout << p1.getEconomyScore() << endl;
+    // cout << "step 1:" << endl;
+    // p1.step();
+    // cout << "step 2:" << endl;
+    // p1.step();
+    // p1.setSelectionPolicy(new SustainabilitySelection());
+    // cout << "step 3:" << endl;
+    // p1.step();
+    // cout << "step 4:" << endl;
+    // p1.step();
+    // cout << "step 5:" << endl;
+    // p1.step();
+    // cout << "step 6:" << endl;
+    // p1.step();
 
     // cout << ss.selectFacility(facilitiesOptions).getName() << endl;
 
-    // if(argc!=2){
-    //     cout << "usage: simulation <config_path>" << endl;
-    //     return 0;g
-    // }
-    // string configurationFile = argv[1];
-    // Simulation simulation(configurationFile);
+    if(argc!=2){
+        cout << "usage: simulation <config_path>" << endl;
+        return 0;
+    }
+    string configurationFile = argv[1];
+    Simulation simulation(configurationFile);
+    
+
     // simulation.start();
     // if(backup!=nullptr){
     // 	delete backup;

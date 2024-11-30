@@ -9,6 +9,10 @@ class SelectionPolicy {
         virtual const string toString() const = 0;
         // virtual SelectionPolicy* clone() const = 0;
         // virtual ~SelectionPolicy() = default;
+    protected:
+        int increaseIndex(int currIndex, int facilitiesOptionsSize);
+        int distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore);
+
 };
 
 class NaiveSelection: public SelectionPolicy {
