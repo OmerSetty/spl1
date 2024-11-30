@@ -56,8 +56,12 @@ void Plan:: step() {
     }
     for(int i = 0; i < u.size(); i++) {
         if((*u[i]).getStatus() == FacilityStatus::OPERATIONAL) {
+            cout << "facility " + (*u[i]).getName() + " finished" << endl;
             addFacility(u[i]);
         }
+    }
+    for(int i = 0; i < u.size(); i++) {
+        cout << (*u[i]).toString() << endl;
     }
 }
 
