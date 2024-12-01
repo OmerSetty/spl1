@@ -22,6 +22,7 @@ class Simulation {
         Settlement &getSettlement(const string &settlementName);
         Plan &getPlan(const int planID);
         void step();
+        void addConfigObject(vector<string> parsedArgs);
         void close();
         void open();
 

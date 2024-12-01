@@ -1,5 +1,10 @@
 #include "Auxiliary.h"
+#include "Facility.h"
+#include "Settlement.h"
 using namespace std;
+using std::string;
+using std::vector;
+
 /*
 This is a 'static' method that receives a string(line) and returns a vector of the string's arguments.
 
@@ -8,11 +13,11 @@ parseArguments("settlement KfarSPL 0") will return vector with ["settlement", "K
 
 To execute this method, use Auxiliary::parseArguments(line)
 */
-std::vector<std::string> Auxiliary::parseArguments(const std::string& line) {
+vector<string> Auxiliary::parseArguments(const string& line) {
     cout << "in Auxiliary::parseArguments" << endl;    
-    std::vector<std::string> arguments;
-    std::istringstream stream(line);
-    std::string argument;
+    vector<string> arguments;
+    istringstream stream(line);
+    string argument;
 
     while (stream >> argument) {
         arguments.push_back(argument);
@@ -20,3 +25,21 @@ std::vector<std::string> Auxiliary::parseArguments(const std::string& line) {
 
     return arguments;
 }
+
+string Auxiliary::getStatusAsString (FacilityStatus status) {
+    if (status == FacilityStatus::UNDER_CONSTRUCTIONS) return "UNDER_CONSTRUCTIONS";
+    else if (status == FacilityStatus::OPERATIONAL) return "OPERATIONAL";
+}
+
+FacilityCategory Auxiliary::getFacilityCategoryStringAsFacilityCategory (string status) {
+    if (status == "LIFE_QUALITY") return FacilityCategory::LIFE_QUALITY;
+    else if (status == "ECONOMY") return FacilityCategory::ECONOMY;
+    else if (status == "ENVIRONMENT") return FacilityCategory::ENVIRONMENT;
+}
+
+SettlementType Auxiliary::getSettlementTypeStringAsSettlementType (string status) {
+    if (status == "VILLAGE") return SettlementType::VILLAGE;
+    else if (status == "CITY") return SettlementType::CITY;
+    else if (status == "METROPOLIS") return SettlementType::METROPOLIS;
+}
+
