@@ -20,10 +20,12 @@ Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPoli
 
 // Make sure theres no memory leak and that the method works
 void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
-    if(getSelectionPolicy().toString() !=  (*selectionPolicy).toString())
+    if (getSelectionPolicy().toString() !=  (*selectionPolicy).toString()) {
+        cout << "old selection policy " + getSelectionPolicy().toString() + " new selection policy " + (*selectionPolicy).toString() << endl;
         delete (*this).selectionPolicy;
         (*this).selectionPolicy = selectionPolicy;
         selectionPolicy = nullptr;
+    }
 }
 
 void Plan:: setStatus(PlanStatus newStatus) {
@@ -56,7 +58,6 @@ void Plan:: step() {
     }
     for(int i = 0; i < u.size(); i++) {
         if((*u[i]).getStatus() == FacilityStatus::OPERATIONAL) {
-            cout << "facility " + (*u[i]).getName() + " finished" << endl;
             addFacility(u[i]);
         }
     }

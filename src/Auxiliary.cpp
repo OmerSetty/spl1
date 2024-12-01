@@ -1,4 +1,5 @@
 #include "Auxiliary.h"
+using namespace std;
 /*
 This is a 'static' method that receives a string(line) and returns a vector of the string's arguments.
 
@@ -8,6 +9,7 @@ parseArguments("settlement KfarSPL 0") will return vector with ["settlement", "K
 To execute this method, use Auxiliary::parseArguments(line)
 */
 std::vector<std::string> Auxiliary::parseArguments(const std::string& line) {
+    cout << "in Auxiliary::parseArguments" << endl;    
     std::vector<std::string> arguments;
     std::istringstream stream(line);
     std::string argument;

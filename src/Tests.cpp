@@ -31,3 +31,20 @@
 // cout << bs.selectFacility(facilitiesOptions).getName() << endl;
 // cout << bs.selectFacility(facilitiesOptions).getName() << endl;
 
+// // Plan
+// Plan* p1 = Plan(100, settlement, new NaiveSelection(), facilitiesOptions);
+// cout << (*p1).toString() << endl;
+// cout << (*p1).getEconomyScore() << endl;
+// cout << "step 1:" << endl;
+// (*p1).step();
+// cout << "step 2:" << endl;
+// (*p1).step();
+// (*p1).setSelectionPolicy(new SustainabilitySelection());
+// cout << "step 3:" << endl;
+// (*p1).step();
+// cout << "step 4:" << endl;
+// (*p1).step();
+// cout << "step 5:" << endl;
+// (*p1).step();
+// cout << "step 6:" << endl;
+// (*p1).step();

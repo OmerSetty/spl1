@@ -103,7 +103,7 @@ const string EconomySelection::toString() const {
 SustainabilitySelection::SustainabilitySelection() : lastSelectedIndex(0) {}
 
 const FacilityType& SustainabilitySelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
-    while (facilitiesOptions[lastSelectedIndex].getCategory() != FacilityCategory::ECONOMY) {
+    while (facilitiesOptions[lastSelectedIndex].getCategory() != FacilityCategory::ENVIRONMENT) {
         lastSelectedIndex = increaseIndex(lastSelectedIndex, facilitiesOptions.size());
     }
     int currentIndex = lastSelectedIndex; 
