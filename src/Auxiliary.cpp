@@ -26,7 +26,7 @@ vector<string> Auxiliary::parseArguments(const string& line) {
     return arguments;
 }
 
-string Auxiliary::getStatusAsString (FacilityStatus status) {
+string Auxiliary::facilityStatusAsString (FacilityStatus status) {
     if (status == FacilityStatus::UNDER_CONSTRUCTIONS) return "UNDER_CONSTRUCTIONS";
     else if (status == FacilityStatus::OPERATIONAL) return "OPERATIONAL";
 }
@@ -41,5 +41,11 @@ SettlementType Auxiliary::getSettlementTypeStringAsSettlementType (string status
     if (status == "VILLAGE") return SettlementType::VILLAGE;
     else if (status == "CITY") return SettlementType::CITY;
     else if (status == "METROPOLIS") return SettlementType::METROPOLIS;
+}
+
+static string settlementTypeToString(SettlementType type) {
+    if(type == SettlementType:: VILLAGE) return "0";
+    if(type == SettlementType:: CITY) return "1";
+    if(type == SettlementType:: METROPOLIS) return "2";
 }
 

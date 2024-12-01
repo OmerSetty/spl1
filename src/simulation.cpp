@@ -56,10 +56,6 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
 }
 
 
-Simulation:: Simulation(const string &configFilePath) {
-
-}
-
 void Simulation:: open() {
     isRunning = true;
 }
@@ -86,11 +82,11 @@ bool Simulation:: addSettlement(Settlement* settlement) {
 
 bool Simulation:: addFacility(FacilityType facility) {
     for(FacilityType existingFacility : facilitiesOptions) {
-        if(facility.getName() != existingFacility.getName())
-        facilitiesOptions.push_back(facility);
-        return true;
+        if(facility.getName() == existingFacility.getName())
+            return false;
     }
-    return false;
+    facilitiesOptions.push_back(facility);
+    return true;
 }
 bool Simulation:: isSettlementExists(const string &settlementName) {
     for(Settlement* s : settlements) {

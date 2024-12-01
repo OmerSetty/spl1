@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include "Action.h"
+#include "Auxiliary.h"
 enum class SettlementType;
 enum class FacilityCategory;
 
@@ -54,7 +55,8 @@ SimulateStep* SimulateStep:: clone() const {
 
 // AddPlan methods
 
-AddPlan:: AddPlan(const string &settlementName, const string &selectionPolicy): BaseAction(), settlementName(settlementName), selectionPolicy(selectionPolicy) {}
+AddPlan:: AddPlan(const string &settlementName, const string &selectionPolicy):
+BaseAction(), settlementName(settlementName), selectionPolicy(selectionPolicy) {}
 
 void AddPlan:: act(Simulation &simulation) {
     // look for the settlement with the same name in 
@@ -62,12 +64,14 @@ void AddPlan:: act(Simulation &simulation) {
         Settlement& planSettlement = simulation.getSettlement(settlementName);
         if(selectionPolicy == "nve")
             simulation.addPlan(planSettlement, new NaiveSelection());
-        if(selectionPolicy == "bal")
+        else if(selectionPolicy == "bal")
             simulation.addPlan(planSettlement, new BalancedSelection(0,0,0));
-        if(selectionPolicy == "eco")
+        else if(selectionPolicy == "eco")
             simulation.addPlan(planSettlement, new NaiveSelection());
-        if(selectionPolicy == "env")
+        else if(selectionPolicy == "env")
             simulation.addPlan(planSettlement, new SustainabilitySelection());
+        else
+            error("Cannot create this plan");
     }
     else
         error("Cannot create this plan");
@@ -81,47 +85,64 @@ const string AddPlan:: toString() const {
 }
 
 AddPlan* AddPlan:: clone() const {
-
+    return new AddPlan(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // AddSettlement methods
 
-AddSettlement:: AddSettlement(const string &settlementName,SettlementType settlementType) {
-
-}
+AddSettlement:: AddSettlement(const string &settlementName,SettlementType settlementType) :
+BaseAction(), settlementName(settlementName), settlementType(settlementType) {}
 
 void AddSettlement:: act(Simulation &simulation) {
+    if(simulation.isSettlementExists(settlementName))
+        error("Settlement already exists");
+    else {
+        Settlement* newSettlement = new Settlement(settlementName, settlementType);
+        simulation.addSettlement(newSettlement);
+    }
+}
 
+const string AddSettlement:: toString() const {
+    if(getStatus() == ActionStatus:: ERROR)
+        return getErrorMsg();
+    else
+        return "settlement " + settlementName + " " + Auxiliary:: settlementTypeToString(settlementType);
 }
 
 AddSettlement* AddSettlement:: clone() const {
-
+    return new AddSettlement(*this);
 }
-const string AddSettlement:: toString() const {
 
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // AddFacility methods
 
-AddFacility:: AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore) {
-
-}
+AddFacility:: AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore):
+BaseAction(), facilityName(facilityName), facilityCategory(facilityCategory), price(price), lifeQualityScore(lifeQualityScore), economyScore(economyScore), environmentScore(environmentScore) {}
 
 void AddFacility:: act(Simulation &simulation) {
+    FacilityType newFacilityType = FacilityType(facilityName, facilityCategory, price, lifeQualityScore, economyScore, environmentScore); // Maybe should be a pointer?
+    bool added = simulation.addFacility(newFacilityType);
+    if(!added) {
+        error("Facility already exists");
+    }
+}
 
+const string AddFacility:: toString() const {
+    if(getStatus() == ActionStatus:: ERROR)
+        return getErrorMsg();
+    else
+        return "need to implement more auxiliary functions to convert everything to a string";
 }
 
 AddFacility* AddFacility:: clone() const {
 
 }
 
-const string AddFacility:: toString() const {
 
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

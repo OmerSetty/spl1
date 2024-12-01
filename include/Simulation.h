@@ -23,6 +23,7 @@ class Simulation {
         bool isPlanExists(const int planID);
         Plan &getPlan(const int planID);
         void step();
+        void addConfigObject(vector<string> parsedArgs);
         void close();
         void open();
         void printSimulationStatus();

@@ -10,8 +10,9 @@ using std::vector;
 class Auxiliary{
     public:
         static vector<string> parseArguments(const string& line);
-        static string getStatusAsString(FacilityStatus status);
+        static string facilityStatusAsString(FacilityStatus status);
         static FacilityCategory getFacilityCategoryStringAsFacilityCategory(string status);
         static SettlementType getSettlementTypeStringAsSettlementType(string status);
+        static string settlementTypeToString(SettlementType);
         
 };
