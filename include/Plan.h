@@ -33,7 +33,7 @@ class Plan {
     //     // Destructor
     //     ~Plan();
     //     // Assignment Opertaor
-    //     Plan& Opertaor=(const Plan& other); // maybe should be void?
+    //      Plan& Opertaor=(const Plan& other) = delete; // maybe should be void?
     //     // Move Constructor
         const SelectionPolicy& getSelectionPolicy() const;
         bool hasLeftCapacity();

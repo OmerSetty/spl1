@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// Simulation* backup = nullptr;
+Simulation* backup = nullptr;
 
 int main(int argc, char** argv){
     // cout << "Hello World!5" << endl;

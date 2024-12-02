@@ -7,12 +7,11 @@
 enum class SettlementType;
 enum class FacilityCategory;
 using namespace std;
+extern Simulation* backup;
 
 // Base Action Methods
 // Constructor
-BaseAction:: BaseAction(): errorMsg("Error Message Initial Value"), status(ActionStatus:: ERROR) {
-
-}
+BaseAction:: BaseAction(): errorMsg("Error Message Initial Value"), status(ActionStatus:: ERROR) {}
 
 ActionStatus BaseAction:: getStatus() const {
     return status;
@@ -31,6 +30,12 @@ const string& BaseAction:: getErrorMsg() const {
     return errorMsg;
 }
 
+const string& BaseAction:: actionStatusToString() const {
+    if(getStatus() == ActionStatus:: COMPLETED)
+        return "COMPLETED";
+    return "ERROR";
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // SimulateStep methods
@@ -45,7 +50,7 @@ void SimulateStep:: act(Simulation &simulation) {
 }
 
 const string SimulateStep:: SimulateStep:: toString() const {
-    return "step" + numOfSteps;
+    return "step" + to_string(numOfSteps) + " " + actionStatusToString();
 }
 
 SimulateStep* SimulateStep:: clone() const {
@@ -89,10 +94,7 @@ void AddPlan:: act(Simulation &simulation) {
 }
 
 const string AddPlan:: toString() const {
-    if(getStatus() == ActionStatus:: ERROR)
-        return getErrorMsg();
-    else
-        return "plan " + settlementName + " " + selectionPolicy;
+        return "plan " + settlementName + " " + selectionPolicy + " " +actionStatusToString();
 }
 
 AddPlan* AddPlan:: clone() const {
@@ -117,10 +119,7 @@ void AddSettlement:: act(Simulation &simulation) {
 }
 
 const string AddSettlement:: toString() const {
-    if(getStatus() == ActionStatus:: ERROR)
-        return getErrorMsg();
-    else
-        return "settlement " + settlementName + " " + Auxiliary:: settlementTypeToString(settlementType);
+        return "settlement " + settlementName + " " + Auxiliary:: settlementTypeToString(settlementType) + " " + actionStatusToString();
 }
 
 AddSettlement* AddSettlement:: clone() const {
@@ -146,10 +145,7 @@ void AddFacility:: act(Simulation &simulation) {
 }
 
 const string AddFacility:: toString() const {
-    if(getStatus() == ActionStatus:: ERROR)
-        return getErrorMsg();
-    else
-        return "facility" + facilityName + to_string(Auxiliary:: facilityCategoryToInt(facilityCategory)) + to_string(price) + to_string(lifeQualityScore) +to_string(economyScore) + to_string(environmentScore);
+        return "facility" + facilityName + to_string(Auxiliary:: facilityCategoryToInt(facilityCategory)) + to_string(price) + to_string(lifeQualityScore) +to_string(economyScore) + to_string(environmentScore) + " " + actionStatusToString();
 }
 
 AddFacility* AddFacility:: clone() const {
@@ -182,10 +178,11 @@ void PrintPlanStatus:: act(Simulation &simulation) {
     }
 }
 PrintPlanStatus* PrintPlanStatus:: clone() const {
-
+    return new PrintPlanStatus(*this);
 }
+
 const string PrintPlanStatus:: toString() const {
-    
+    return "planStatus" + to_string(planId) + " " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +222,7 @@ ChangePlanPolicy* ChangePlanPolicy:: clone() const {
 }
 
 const string ChangePlanPolicy:: toString() const {
-    return "PlanID: " + to_string(planId) + "\npreviousPolicy: " + prevPolicy + "\nnewPolicy: " + newPolicy; 
+    return "PlanID: " + to_string(planId) + "\npreviousPolicy: " + prevPolicy + "\nnewPolicy: " + newPolicy + " " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -241,11 +238,11 @@ void PrintActionsLog:: act(Simulation &simulation) {
 }
 
 PrintActionsLog* PrintActionsLog:: clone() const {
-
+    return new PrintActionsLog(*this);
 }
 
 const string PrintActionsLog:: toString() const {
-    return "log";
+    return "log" + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -253,7 +250,7 @@ const string PrintActionsLog:: toString() const {
 // Close methods
 
 Close:: Close() {
-    
+
 }
 
 void Close:: act(Simulation &simulation) {
@@ -261,11 +258,11 @@ void Close:: act(Simulation &simulation) {
 }
 
 Close* Close:: clone() const {
-
+    return new Close(*this);
 }
 
 const string Close:: toString() const {
-
+    "close" + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,25 +282,28 @@ BackupSimulation* BackupSimulation:: clone() const {
 }
 
 const string BackupSimulation:: toString() const {
-
+    return "backup " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // RestoreSimulation methods
 
-RestoreSimulation:: RestoreSimulation() {
-
-}
+RestoreSimulation:: RestoreSimulation(): BaseAction() {}
 
 void RestoreSimulation:: act(Simulation &simulation) {
-
+    if(backup == nullptr)
+        error("No backup available");
+    else {
+        simulation = *backup;
+        complete();
+    }
 }
 
 RestoreSimulation* RestoreSimulation:: clone() const {
-
+    return new RestoreSimulation(*this);
 }
 
 const string RestoreSimulation:: toString() const {
-
+    return "restore " + actionStatusToString();
 }
