@@ -27,6 +27,7 @@ class Simulation {
         void close();
         void open();
         void printSimulationStatus();
+        const vector<BaseAction*>& getActionsLog() const;
 
     private:
         bool isRunning;

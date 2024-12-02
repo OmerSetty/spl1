@@ -39,6 +39,9 @@ void Plan:: addFacility(Facility* facility) {
     u.erase(find(u.begin(), u.end(), facility));
     facilities.push_back(facility); // dont forget to deeply delete everything after the end of the use.
     setStatus(PlanStatus:: AVALIABLE);
+    life_quality_score += facility->getLifeQualityScore();
+    economy_score += facility->getEconomyScore();
+    environment_score += facility->getEnvironmentScore();
 }
 
 void Plan:: step() {

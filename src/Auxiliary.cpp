@@ -42,9 +42,21 @@ SettlementType Auxiliary::getSettlementTypeStringAsSettlementType (string status
     else if (status == "METROPOLIS") return SettlementType::METROPOLIS;
 }
 
-static string settlementTypeToString(SettlementType type) {
+string Auxiliary:: settlementTypeToString(SettlementType type) {
     if(type == SettlementType:: VILLAGE) return "0";
     if(type == SettlementType:: CITY) return "1";
     if(type == SettlementType:: METROPOLIS) return "2";
 }
 
+int Auxiliary:: facilityCategoryToInt(FacilityCategory category) {
+    if(category == FacilityCategory:: LIFE_QUALITY)
+        return 0;
+    else if(category == FacilityCategory:: ECONOMY)
+        return 1;
+    else if(category == FacilityCategory:: ENVIRONMENT)
+        return 2;
+    else {
+        cout << "No legal facilityCategory detected. output is 300. Check config file";
+        return 300;
+    }
+}

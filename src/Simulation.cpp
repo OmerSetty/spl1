@@ -8,6 +8,7 @@
 #include "Settlement.h"
 #include "Plan.h"
 #include "Auxiliary.h"
+#include "Action.h"
 using std::string;
 using std::vector;
 using namespace std;
@@ -23,7 +24,7 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false) {
     std::ifstream file(configFilePath);
     string currentLine;
     while (std::getline(file, currentLine)) {
-        // cout << currentLine << endl;
+        cout << currentLine << endl;
         vector<string> parsedArgs = Auxiliary::parseArguments(currentLine);
         addConfigObject(parsedArgs);
     }
@@ -62,11 +63,53 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
 
 
 void Simulation:: open() {
-    isRunning = true;
+    while(isRunning) {
+        string input;
+        cin >> input;
+        vector<string> inputArguments = Auxiliary:: parseArguments(input);
+        BaseAction* action;
+        vector<string>& ia = inputArguments;
+        bool isPrintActionsLog = false;
+        if(ia[0] == "step") {
+            action = new SimulateStep(stoi(ia[1]));
+        }
+        else if(ia[0] == "plan") {
+            action = new AddPlan(ia[1], ia[2]);
+        }
+        else if(ia[0] == "settlement") {
+            action = new AddSettlement(ia[1], Auxiliary:: getSettlementTypeStringAsSettlementType(ia[2]));
+        }
+        else if(ia[0] == "facility") {
+            action = new AddFacility(ia[1], Auxiliary:: getFacilityCategoryStringAsFacilityCategory(ia[2]), stoi(ia[3]), stoi(ia[4]), stoi(ia[5]), stoi(ia[6]));
+        }
+        else if(ia[0] == " planStatus") {
+            action = new PrintPlanStatus(stoi(ia[1]));
+        }
+        else if(ia[0] == " changePolicy") {
+            action = new ChangePlanPolicy(stoi(ia[1]), ia[2]);
+        }
+        else if(ia[0] == "log") {
+            action = new PrintActionsLog();
+            isPrintActionsLog = true;
+        }
+        else if(ia[0] == "close") {
+            action = new Close();
+        }
+        else if(ia[0] == "backup") {
+            action = new BackupSimulation();
+        }
+        else if(ia[0] == "restore") {
+            action = new RestoreSimulation();
+        }
+        action->act(*this);
+        if(!isPrintActionsLog)
+            actionsLog.push_back(action);
+    }
 }
 
 void Simulation:: start() {
     cout << "The simulation has started" << endl;
+    isRunning = true;
     open();
 }
 
@@ -114,6 +157,10 @@ bool Simulation:: isPlanExists(const int planID) {
             return true;
     }
     return false;
+}
+
+const vector<BaseAction*>& Simulation:: getActionsLog() const {
+    return actionsLog;
 }
 
 Plan& Simulation:: getPlan(const int planID) {

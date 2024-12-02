@@ -14,6 +14,7 @@ class Auxiliary{
         static string facilityStatusAsString(FacilityStatus status);
         static FacilityCategory getFacilityCategoryStringAsFacilityCategory(string status);
         static SettlementType getSettlementTypeStringAsSettlementType(string status);
-        static string settlementTypeToString(SettlementType);
+        static string settlementTypeToString(SettlementType type);
+        static int facilityCategoryToInt(FacilityCategory category);
         
 };
