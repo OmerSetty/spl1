@@ -37,11 +37,11 @@ const string& BaseAction:: getErrorMsg() const {
 
 SimulateStep:: SimulateStep(const int numOfSteps): BaseAction(), numOfSteps(numOfSteps) {}
 
-
 void SimulateStep:: act(Simulation &simulation) {
     for(int i=0; i < numOfSteps; i++){
         simulation.step();
     }
+    complete();
 }
 
 const string SimulateStep:: SimulateStep:: toString() const {
@@ -61,21 +61,31 @@ BaseAction(), settlementName(settlementName), selectionPolicy(selectionPolicy) {
 
 void AddPlan:: act(Simulation &simulation) {
     // look for the settlement with the same name in 
-    if(simulation.isSettlementExists(settlementName)) {
-        Settlement& planSettlement = simulation.getSettlement(settlementName);
-        if(selectionPolicy == "nve")
-            simulation.addPlan(planSettlement, new NaiveSelection());
-        else if(selectionPolicy == "bal")
-            simulation.addPlan(planSettlement, new BalancedSelection(0,0,0));
-        else if(selectionPolicy == "eco")
-            simulation.addPlan(planSettlement, new NaiveSelection());
-        else if(selectionPolicy == "env")
-            simulation.addPlan(planSettlement, new SustainabilitySelection());
-        else
-            error("Cannot create this plan");
-    }
-    else
+    if(!simulation.isSettlementExists(settlementName)) {
         error("Cannot create this plan");
+    }
+    else {
+        Settlement& planSettlement = simulation.getSettlement(settlementName);
+        if(selectionPolicy == "nve") {
+            simulation.addPlan(planSettlement, new NaiveSelection());
+            complete();
+        }
+        else if(selectionPolicy == "bal") {
+            simulation.addPlan(planSettlement, new BalancedSelection(0,0,0));
+            complete();
+        }
+        else if(selectionPolicy == "eco") {
+            simulation.addPlan(planSettlement, new NaiveSelection());
+            complete();
+        }
+            
+        else if(selectionPolicy == "env") {
+            simulation.addPlan(planSettlement, new SustainabilitySelection());
+            complete();
+        }    
+        else
+            error("did not get a leagal selectionPolicy. Check the config file");
+    }
 }
 
 const string AddPlan:: toString() const {
@@ -102,6 +112,7 @@ void AddSettlement:: act(Simulation &simulation) {
     else {
         Settlement* newSettlement = new Settlement(settlementName, settlementType);
         simulation.addSettlement(newSettlement);
+        complete();
     }
 }
 
@@ -130,17 +141,19 @@ void AddFacility:: act(Simulation &simulation) {
     if(!added) {
         error("Facility already exists");
     }
+    else
+        complete();
 }
 
 const string AddFacility:: toString() const {
     if(getStatus() == ActionStatus:: ERROR)
         return getErrorMsg();
     else
-        return "need to implement more auxiliary functions to convert everything to a string";
+        return "facility" + facilityName + to_string(Auxiliary:: facilityCategoryToInt(facilityCategory)) + to_string(price) + to_string(lifeQualityScore) +to_string(economyScore) + to_string(environmentScore);
 }
 
 AddFacility* AddFacility:: clone() const {
-
+    return new AddFacility(*this);
 }
 
 
@@ -219,12 +232,12 @@ const string ChangePlanPolicy:: toString() const {
 
 // PrintActionsLog methods
 
-PrintActionsLog:: PrintActionsLog() {
-
-}
+PrintActionsLog:: PrintActionsLog(): BaseAction() {}
 
 void PrintActionsLog:: act(Simulation &simulation) {
-
+    for(BaseAction* action : simulation.getActionsLog()) {
+        cout << action->toString() << endl;
+    }
 }
 
 PrintActionsLog* PrintActionsLog:: clone() const {
@@ -232,7 +245,7 @@ PrintActionsLog* PrintActionsLog:: clone() const {
 }
 
 const string PrintActionsLog:: toString() const {
-
+    return "log";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -240,7 +253,7 @@ const string PrintActionsLog:: toString() const {
 // Close methods
 
 Close:: Close() {
-
+    
 }
 
 void Close:: act(Simulation &simulation) {
