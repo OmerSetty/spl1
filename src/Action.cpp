@@ -6,6 +6,7 @@
 #include "Auxiliary.h"
 enum class SettlementType;
 enum class FacilityCategory;
+using namespace std;
 
 // Base Action Methods
 // Constructor
@@ -148,39 +149,70 @@ AddFacility* AddFacility:: clone() const {
 
 // PrintPlanStatus methods
 
-PrintPlanStatus:: PrintPlanStatus(int planId) {
-
-}
+PrintPlanStatus:: PrintPlanStatus(int planId) : planId(planId) {}
 
 void PrintPlanStatus:: act(Simulation &simulation) {
-
+    if (!simulation.isPlanExists(planId)) {
+        error("Cannot change selection policy");
+        return;
+    }
+    Plan& plan = simulation.getPlan(planId);
+    string planStatus = "PlanID: " + to_string(planId) + "\nSettlementName: " + plan.getSettlment().getName() +
+        "\nPlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) + "\nSelectionPolicy: " + plan.getSelectionPolicy().toString()
+        + "\nLifeQualityScore: " + to_string(plan.getlifeQualityScore()) + "\nEconomyScore: " + to_string(plan.getEconomyScore()) + "EnvrionmentScore: "
+        + to_string(plan.getEnvironmentScore());
+    for (const Facility* facility: plan.getFacilities()) {
+        planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS";
+    }
+    for (const Facility* facility: plan.getUnderConstructionFacilities()) {
+        planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION";
+    }
 }
 PrintPlanStatus* PrintPlanStatus:: clone() const {
 
 }
-
 const string PrintPlanStatus:: toString() const {
-
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // ChangePlanPolicy methods
 
-ChangePlanPolicy:: ChangePlanPolicy(const int planId, const string &newPolicy) {
-
-}
+ChangePlanPolicy:: ChangePlanPolicy(const int planId, const string &newPolicy) : BaseAction(), planId(planId), newPolicy(newPolicy), prevPolicy(""){}
 
 void ChangePlanPolicy:: act(Simulation &simulation) {
-
+    if (!simulation.isPlanExists(planId)) {
+        error("Cannot change selection policy");
+        return;
+    }
+    Plan& plan = simulation.getPlan(planId);
+    if (prevPolicy == newPolicy) {
+        error("Cannot change selection policy");
+        return;
+    }
+    if (newPolicy == "nve") {
+        plan.setSelectionPolicy(new NaiveSelection());
+    }
+    else if (newPolicy == "bal") {
+        plan.setSelectionPolicy(new BalancedSelection(0, 0, 0));
+    }
+    else if (newPolicy == "eco") {
+        plan.setSelectionPolicy(new EconomySelection());
+    }
+    else if (newPolicy == "env") {
+        plan.setSelectionPolicy(new SustainabilitySelection());
+    }
+    cout << toString() << endl;
+    prevPolicy = newPolicy;
 }
 
 ChangePlanPolicy* ChangePlanPolicy:: clone() const {
-
+    return new ChangePlanPolicy(*this);
 }
 
 const string ChangePlanPolicy:: toString() const {
-
+    return "PlanID: " + to_string(planId) + "\npreviousPolicy: " + prevPolicy + "\nnewPolicy: " + newPolicy; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

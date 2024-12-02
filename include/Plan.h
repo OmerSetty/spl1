@@ -23,6 +23,7 @@ class Plan {
         void step();
         void printStatus();
         const vector<Facility*> &getFacilities() const;
+        const vector<Facility*> &getUnderConstructionFacilities() const;
         void addFacility(Facility* facility);
         const string toString() const;
 
@@ -36,6 +37,7 @@ class Plan {
     //     // Move Constructor
         const SelectionPolicy& getSelectionPolicy() const;
         bool hasLeftCapacity();
+        const PlanStatus getStatus() const;
     private:
         int plan_id;
         const Settlement &settlement;

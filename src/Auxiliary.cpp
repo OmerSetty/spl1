@@ -1,6 +1,7 @@
 #include "Auxiliary.h"
 #include "Facility.h"
 #include "Settlement.h"
+#include "Plan.h"
 using namespace std;
 using std::string;
 using std::vector;
@@ -42,7 +43,12 @@ SettlementType Auxiliary::getSettlementTypeStringAsSettlementType (string status
     else if (status == "METROPOLIS") return SettlementType::METROPOLIS;
 }
 
-static string settlementTypeToString(SettlementType type) {
+string Auxiliary::getPlanStatusAsString (PlanStatus status) {
+    if (status == PlanStatus::BUSY) return "BUSY";
+    else if (status == PlanStatus::AVALIABLE) return "AVALIABLE";
+}
+
+string settlementTypeToString(SettlementType type) {
     if(type == SettlementType:: VILLAGE) return "0";
     if(type == SettlementType:: CITY) return "1";
     if(type == SettlementType:: METROPOLIS) return "2";

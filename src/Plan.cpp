@@ -75,8 +75,16 @@ void Plan:: printStatus() {
     cout << getStatusAsString(status) << endl;
 }
 
+const PlanStatus Plan:: getStatus() const {
+    return status;
+}
+
 const vector<Facility*>& Plan:: getFacilities() const {
     return facilities;
+}
+
+const vector<Facility*>& Plan:: getUnderConstructionFacilities() const {
+    return underConstruction;
 }
 
 const SelectionPolicy& Plan:: getSelectionPolicy() const {

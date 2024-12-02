@@ -5,6 +5,7 @@
 #include <string>
 #include "Facility.h"
 #include "Settlement.h"
+#include "Plan.h"
 using std::string;
 using std::vector;
 
@@ -14,6 +15,6 @@ class Auxiliary{
         static string facilityStatusAsString(FacilityStatus status);
         static FacilityCategory getFacilityCategoryStringAsFacilityCategory(string status);
         static SettlementType getSettlementTypeStringAsSettlementType(string status);
+        static string getPlanStatusAsString(PlanStatus status);
         static string settlementTypeToString(SettlementType);
-        
 };
