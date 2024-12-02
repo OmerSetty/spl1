@@ -30,6 +30,22 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false) {
     }
 }
 
+// should we initialize a vector of non-pointers like that? (e.g: plans, facilitiesOptons)
+Simulation::Simulation(const Simulation& other) : isRunning(other.isRunning), planCounter(other.planCounter), plans(other.plans), facilitiesOptions(other.facilitiesOptions) {
+    for (BaseAction* action : actionsLog) {
+        delete action;
+    }
+    for (BaseAction* action : other.actionsLog) {
+        actionsLog.push_back(action);
+    }
+    for (Settlement* settlement : settlements) {
+        delete settlement;
+    }
+    for (Settlement* settlement : other.settlements) {
+        settlements.push_back(settlement);
+    }
+}
+
 void Simulation::addConfigObject(vector<string> parsedArgs) {
     // cout << "in addCONfigObject" << endl;
     const string typeOfObject = parsedArgs[0];

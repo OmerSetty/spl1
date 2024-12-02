@@ -176,6 +176,7 @@ void PrintPlanStatus:: act(Simulation &simulation) {
     for (const Facility* facility: plan.getUnderConstructionFacilities()) {
         planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION";
     }
+    complete();
 }
 PrintPlanStatus* PrintPlanStatus:: clone() const {
     return new PrintPlanStatus(*this);
@@ -203,18 +204,24 @@ void ChangePlanPolicy:: act(Simulation &simulation) {
     }
     if (newPolicy == "nve") {
         plan.setSelectionPolicy(new NaiveSelection());
+        complete();
     }
     else if (newPolicy == "bal") {
         plan.setSelectionPolicy(new BalancedSelection(0, 0, 0));
+        complete();
     }
     else if (newPolicy == "eco") {
         plan.setSelectionPolicy(new EconomySelection());
+        complete();
     }
     else if (newPolicy == "env") {
         plan.setSelectionPolicy(new SustainabilitySelection());
     }
-    cout << toString() << endl;
-    prevPolicy = newPolicy;
+    if (newPolicy == "nve" || newPolicy == "bal" || newPolicy == "eco" || newPolicy == "env") {
+        cout << "PlanID: " + to_string(planId) + "\npreviousPolicy: " + prevPolicy + "\nnewPolicy: " + newPolicy << endl;
+        prevPolicy = newPolicy;
+        complete();
+    }
 }
 
 ChangePlanPolicy* ChangePlanPolicy:: clone() const {
@@ -269,16 +276,15 @@ const string Close:: toString() const {
 
 // BackupSimulation methods
 
-BackupSimulation:: BackupSimulation() {
-
-}
+BackupSimulation:: BackupSimulation() {}
 
 void BackupSimulation:: act(Simulation &simulation) {
-
+    *backup = simulation;
+    complete();
 }
 
 BackupSimulation* BackupSimulation:: clone() const {
-
+    return new BackupSimulation(*this);
 }
 
 const string BackupSimulation:: toString() const {
