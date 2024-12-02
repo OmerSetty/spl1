@@ -67,6 +67,7 @@ int main(int argc, char** argv){
     }
     string configurationFile = argv[1];
     Simulation simulation(configurationFile);
+    simulation.printSimulationStatus();
     
 
     // simulation.start();

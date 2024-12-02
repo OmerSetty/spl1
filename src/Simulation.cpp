@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "Simulation.h"
 #include "Facility.h"
 #include "Settlement.h"
@@ -29,27 +30,31 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false) {
 }
 
 void Simulation::addConfigObject(vector<string> parsedArgs) {
+    // cout << "in addCONfigObject" << endl;
     const string typeOfObject = parsedArgs[0];
     // NOT SURE - who should delete the values on the heap?
-    if (typeOfObject == "Settlement") {
+    if (typeOfObject == "settlement") {
+        cout << "in settlement" << endl;
         addSettlement(new Settlement(parsedArgs[1], Auxiliary::getSettlementTypeStringAsSettlementType(parsedArgs[2])));
     } 
-    else if (typeOfObject == "Facility") {
+    else if (typeOfObject == "facility") {
+        cout << "in facility" << endl;
         addFacility(FacilityType(parsedArgs[1], Auxiliary::getFacilityCategoryStringAsFacilityCategory(parsedArgs[2]), stoi(parsedArgs[3]), 
                                                                     stoi(parsedArgs[4]), stoi(parsedArgs[5]), stoi(parsedArgs[6])));
     }
-    else if (typeOfObject == "Plan") {
-        const string selectionPilicyType = parsedArgs[2];
-        if (selectionPilicyType == "nve") {
+    else if (typeOfObject == "plan") {
+        cout << "in plan" << endl;
+        const string selectionPolicyType = parsedArgs[2];
+        if (selectionPolicyType == "nve") {
             addPlan(getSettlement(parsedArgs[1]), new NaiveSelection());
         }
-        if (selectionPilicyType == "bal") {
+        if (selectionPolicyType == "bal") {
             addPlan(getSettlement(parsedArgs[1]), new BalancedSelection(0, 0, 0));
         }
-        if (selectionPilicyType == "eco") {
+        if (selectionPolicyType == "eco") {
             addPlan(getSettlement(parsedArgs[1]), new EconomySelection());
         }
-        if (selectionPilicyType == "env") {
+        if (selectionPolicyType == "env") {
             addPlan(getSettlement(parsedArgs[1]), new SustainabilitySelection());
         }
     }
@@ -73,7 +78,7 @@ void Simulation:: addAction(BaseAction *action) {
     actionsLog.push_back(action);   // Check whether there is an action that shouldnt be added (maybe restore).
 }
 bool Simulation:: addSettlement(Settlement* settlement) {
-    if(!isSettlementExists()){
+    if(!isSettlementExists(settlement->getName())){
         settlements.push_back(settlement);
         return true;
     }
@@ -126,12 +131,11 @@ void Simulation:: step() {
 
 void Simulation:: printSimulationStatus() {
     for(Plan p : plans) {
-        cout << "PlanID: " + p.getPlanID() << endl;
-        cout << "SettlementName" + p.getSettlment().getName() << endl;
-        cout << "LifeQuality_Score:" + p.getlifeQualityScore() << endl;
-        cout << "Economy_Score:" + p.getEconomyScore() << endl;
-        cout << "Economy_Score:" + p.getEconomyScore() << endl;
-        cout << "Environment_Score:" + p.getEnvironmentScore() << endl;
+        cout << "PlanID: " + to_string(p.getPlanID()) << endl;
+        cout << "SettlementName: " + p.getSettlment().getName() << endl;
+        cout << "LifeQuality_Score:" + to_string(p.getlifeQualityScore()) << endl;
+        cout << "Economy_Score:" + to_string(p.getEconomyScore()) << endl;
+        cout << "Environment_Score:" + to_string(p.getEnvironmentScore()) << endl;
     }  
 }
 

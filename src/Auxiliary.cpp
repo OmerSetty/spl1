@@ -13,8 +13,7 @@ parseArguments("settlement KfarSPL 0") will return vector with ["settlement", "K
 
 To execute this method, use Auxiliary::parseArguments(line)
 */
-vector<string> Auxiliary::parseArguments(const string& line) {
-    cout << "in Auxiliary::parseArguments" << endl;    
+vector<string> Auxiliary::parseArguments(const string& line) {  
     vector<string> arguments;
     istringstream stream(line);
     string argument;

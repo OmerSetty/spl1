@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include "Facility.h"
+#include "Settlement.h"
 using std::string;
 using std::vector;
 
