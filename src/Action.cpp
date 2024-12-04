@@ -24,6 +24,7 @@ void BaseAction:: complete() {
 void BaseAction:: error(string errorMsg) {
     status = ActionStatus:: ERROR;
     (*this).errorMsg = errorMsg;
+    cout << "ERROR" + errorMsg;
 }
 
 const string& BaseAction:: getErrorMsg() const {

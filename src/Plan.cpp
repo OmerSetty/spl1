@@ -18,6 +18,29 @@ Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPoli
     : plan_id(currPlanId), settlement(currSettlement), selectionPolicy(currSelectionPolicy), facilityOptions(currFacilityOptions),
       life_quality_score(0), economy_score(0), environment_score(0), status(PlanStatus::AVALIABLE) {}
 
+// Rule of 5-ish
+
+// Move Constructor
+Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(other.facilityOptions), 
+        life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()), status(other.getStatus()) {
+     other.selectionPolicy = nullptr;
+     other.facilities.clear();
+     other.underConstruction.clear();
+}
+
+// Distructor
+Plan:: ~Plan() {
+    delete selectionPolicy;
+    for(Facility* f : facilities) {
+        delete f;
+    }
+    facilities.clear();
+    for(Facility* uc : underConstruction) {
+        delete uc;
+    }
+    underConstruction.clear();
+}
+
 // Make sure theres no memory leak and that the method works
 void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
     if (getSelectionPolicy().toString() !=  (*selectionPolicy).toString()) {
@@ -88,6 +111,10 @@ const vector<Facility*>& Plan:: getFacilities() const {
 
 const vector<Facility*>& Plan:: getUnderConstructionFacilities() const {
     return underConstruction;
+}
+
+const vector<FacilityType>& Plan:: getFacilityOptions() const {
+    return facilityOptions;
 }
 
 const SelectionPolicy& Plan:: getSelectionPolicy() const {

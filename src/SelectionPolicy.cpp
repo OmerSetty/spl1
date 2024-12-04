@@ -21,6 +21,8 @@ int SelectionPolicy:: increaseIndex(int currIndex, int facilitiesOptionsSize) {
     return currIndex;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 // NaiveSelection implementations 
 NaiveSelection::NaiveSelection() : lastSelectedIndex(0) {}
 
@@ -34,11 +36,9 @@ const string NaiveSelection:: toString() const {
     return "Naive Selction";
 }
 
-// NaiveSelection* NaiveSelection::clone() {
-//     return this;
-// }
-// // TODO
-// NaiveSelection::~NaiveSelection() {}
+NaiveSelection* NaiveSelection:: clone() const {
+    return new NaiveSelection(*this);
+}
 
 int SelectionPolicy:: distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore) {
     int max = lifeQualityScore;
@@ -50,6 +50,7 @@ int SelectionPolicy:: distanceCalculator (int lifeQualityScore, int economyScore
     return max-min;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // BalancedSelection implementations
 BalancedSelection::BalancedSelection(int currLifeQualityScore, int currEconomyScore, int currEnvironmentScore) :
@@ -71,9 +72,15 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
     return facilitiesOptions[index];
 }
 
+BalancedSelection* BalancedSelection:: clone() const {
+    return new BalancedSelection(*this);
+}
+
 const string BalancedSelection:: toString() const {
     return "Balanced Selection";
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // EconomySelection implementations
 EconomySelection::EconomySelection() : lastSelectedIndex(0) {}
@@ -86,18 +93,16 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
     increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
-// TODO? (Not in assignment)
+
 const string EconomySelection::toString() const {
     return "Economy Selection";
 }
 
-// virtual EconomySelection* EconomySelection::clone() {
-//     return this;
-// }
-// // TODO
-// virtual EconomySelection::~EconomySelection() {}
+EconomySelection* EconomySelection::clone() const {
+    return new EconomySelection(*this);
+}
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // SustainabilitySelection implementations
 SustainabilitySelection::SustainabilitySelection() : lastSelectedIndex(0) {}
@@ -110,13 +115,11 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
     increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
-// TODO? (Not in assignment)
+
 const string SustainabilitySelection::toString() const {
     return "Sustainability Selection";
 }
 
-// SustainabilitySelection* SustainabilitySelection::clone() {
-//     return this;
-// }
-// // TODO
-// virtual SustainabilitySelection::~SustainabilitySelection() {}
+SustainabilitySelection* SustainabilitySelection::clone() const {
+    return new SustainabilitySelection(*this);
+}
