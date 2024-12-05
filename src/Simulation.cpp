@@ -32,18 +32,68 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false) {
 
 // should we initialize a vector of non-pointers like that? (e.g: plans, facilitiesOptons)
 Simulation::Simulation(const Simulation& other) : isRunning(other.isRunning), planCounter(other.planCounter), plans(other.plans), facilitiesOptions(other.facilitiesOptions) {
-    for (BaseAction* action : actionsLog) {
-        delete action;
-    }
     for (BaseAction* action : other.actionsLog) {
         actionsLog.push_back(action);
-    }
-    for (Settlement* settlement : settlements) {
-        delete settlement;
     }
     for (Settlement* settlement : other.settlements) {
         settlements.push_back(settlement);
     }
+}
+
+Simulation::Simulation(Simulation&& other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(other.actionsLog),
+            plans(other.plans), settlements(other.settlements), facilitiesOptions(other.facilitiesOptions) {
+    other.actionsLog.clear();
+    other.settlements.clear();
+}
+
+Simulation& Simulation:: operator=(const Simulation &other) {
+    if (this != &other) {
+        isRunning = other.isRunning;
+        planCounter = other.planCounter;
+        for (BaseAction* action: actionsLog) {
+            delete action;
+        }
+        for (BaseAction* action: other.actionsLog) {
+            actionsLog.push_back((*action).clone());
+        }
+        plans = other.plans;
+        for (Settlement* settlement: settlements) {
+            delete settlement;
+        }
+        for (Settlement* settlement: other.settlements) {
+
+            settlements.push_back(settlement);
+            settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
+        }
+        facilitiesOptions = other.facilitiesOptions;
+    }
+    return *this;
+}
+
+Simulation& Simulation:: operator=(Simulation &&other) {
+    if (this != &other) {
+        isRunning = other.isRunning;
+        planCounter = other.planCounter;
+
+        for (BaseAction* action: actionsLog) {
+            delete action;
+        }
+        actionsLog = other.actionsLog;
+        // clear or nullptr?
+        other.actionsLog.clear();
+
+        plans = other.plans;
+
+        for (Settlement* settlement: settlements) {
+            delete settlement;
+        }
+        settlements = other.settlements;
+        // clear or nullptr?
+        other.settlements.clear();
+
+        facilitiesOptions = other.facilitiesOptions;
+    }
+    return *this;
 }
 
 void Simulation::addConfigObject(vector<string> parsedArgs) {

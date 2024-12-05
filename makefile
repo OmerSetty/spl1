@@ -13,7 +13,7 @@ all: hello
 
 hello: clean bin/main.o 
 	
-	g++ -o bin/main bin/main.o bin/Facility.o bin/Settlement.o bin/SelectionPolicy.o bin/Plan.o bin/Simulation.o bin/Auxiliary.o
+	g++ -o bin/main bin/main.o bin/Facility.o bin/Settlement.o bin/SelectionPolicy.o bin/Plan.o bin/Simulation.o bin/Auxiliary.o bin/Action.o
 	
 	./bin/main /workspaces/Skeleton/config_file.txt
 
@@ -28,6 +28,7 @@ bin/main.o: src/main.cpp
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Plan.o src/Plan.cpp
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Simulation.o src/Simulation.cpp
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Auxiliary.o src/Auxiliary.cpp
+	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Action.o src/Action.cpp
 
 
 # Depends on the source and header files

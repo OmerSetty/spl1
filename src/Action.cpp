@@ -3,6 +3,8 @@
 #include <vector>
 #include <iostream>
 #include "Action.h"
+#include "Plan.h"
+#include "Simulation.h"
 #include "Auxiliary.h"
 enum class SettlementType;
 enum class FacilityCategory;

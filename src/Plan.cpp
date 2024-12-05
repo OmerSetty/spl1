@@ -9,6 +9,7 @@
 #include "Settlement.h"
 #include "SelectionPolicy.h"
 #include "Plan.h"
+#include "Auxiliary.h"
 
 using std::string;
 using std::vector;
@@ -17,6 +18,9 @@ using namespace std;
 Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPolicy* currSelectionPolicy, const vector<FacilityType> &currFacilityOptions)
     : plan_id(currPlanId), settlement(currSettlement), selectionPolicy(currSelectionPolicy), facilityOptions(currFacilityOptions),
       life_quality_score(0), economy_score(0), environment_score(0), status(PlanStatus::AVALIABLE) {}
+
+Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(other.facilityOptions), 
+            life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()), status(other.getStatus()){}
 
 // Make sure theres no memory leak and that the method works
 void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
@@ -69,13 +73,8 @@ void Plan:: step() {
     }
 }
 
-string getStatusAsString (PlanStatus status) {
-    if (status == PlanStatus::AVALIABLE) return "AVALIABLE";
-    if (status == PlanStatus::BUSY) return "BUSY";
-}
-
 void Plan:: printStatus() {
-    cout << getStatusAsString(status) << endl;
+    cout << Auxiliary::getPlanStatusAsString(status) << endl;
 }
 
 const PlanStatus Plan:: getStatus() const {

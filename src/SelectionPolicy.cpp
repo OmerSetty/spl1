@@ -34,9 +34,10 @@ const string NaiveSelection:: toString() const {
     return "Naive Selction";
 }
 
-// NaiveSelection* NaiveSelection::clone() {
-//     return this;
-// }
+NaiveSelection* NaiveSelection::clone() const {
+    return new NaiveSelection(*this);
+}
+
 // // TODO
 // NaiveSelection::~NaiveSelection() {}
 
@@ -75,6 +76,10 @@ const string BalancedSelection:: toString() const {
     return "Balanced Selection";
 }
 
+BalancedSelection* BalancedSelection::clone() const {
+    return new BalancedSelection(*this);
+}
+
 // EconomySelection implementations
 EconomySelection::EconomySelection() : lastSelectedIndex(0) {}
 
@@ -91,9 +96,9 @@ const string EconomySelection::toString() const {
     return "Economy Selection";
 }
 
-// virtual EconomySelection* EconomySelection::clone() {
-//     return this;
-// }
+EconomySelection* EconomySelection::clone() const {
+    return new EconomySelection(*this);
+}
 // // TODO
 // virtual EconomySelection::~EconomySelection() {}
 
@@ -115,8 +120,8 @@ const string SustainabilitySelection::toString() const {
     return "Sustainability Selection";
 }
 
-// SustainabilitySelection* SustainabilitySelection::clone() {
-//     return this;
-// }
+SustainabilitySelection* SustainabilitySelection::clone() const {
+    return new SustainabilitySelection(*this);
+}
 // // TODO
 // virtual SustainabilitySelection::~SustainabilitySelection() {}

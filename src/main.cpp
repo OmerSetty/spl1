@@ -1,4 +1,6 @@
 // #include "Simulation.h"
+#include "Simulation.h"
+#include "Action.h"
 #include <iostream>
 // #include <Settlement.h>
 #include <../include/Settlement.h>
@@ -6,6 +8,7 @@
 #include <../include/SelectionPolicy.h>
 #include <../include/Plan.h>
 #include <../include/Simulation.h>
+#include <../include/Action.h>
 #include <climits>
 
 using namespace std;
@@ -65,9 +68,9 @@ int main(int argc, char** argv){
         cout << "usage: simulation <config_path>" << endl;
         return 0;
     }
-    string configurationFile = argv[1];
-    Simulation simulation(configurationFile);
-    simulation.printSimulationStatus();
+    // string configurationFile = argv[1];
+    // Simulation simulation(configurationFile);
+    // simulation.printSimulationStatus();
     
 
     // simulation.start();

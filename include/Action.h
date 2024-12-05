@@ -2,8 +2,10 @@
 #include <string>
 #include <vector>
 #include "Simulation.h"
+#include "Plan.h"
 enum class SettlementType;
 enum class FacilityCategory;
+class Simulation;
 
 enum class ActionStatus{
     COMPLETED, ERROR
