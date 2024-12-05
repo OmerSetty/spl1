@@ -77,6 +77,18 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
     }
 }
 
+// Rule of 5
+// Distructor
+Simulation:: ~Simulation() {
+    for(BaseAction* action : actionsLog) {
+        delete action;
+    }
+    actionsLog.clear();
+    for(Settlement* settlement : settlements) {
+        delete settlement;
+    }
+    settlements.clear();
+}
 
 void Simulation:: open() {
     while(isRunning) {
