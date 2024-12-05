@@ -21,6 +21,28 @@ Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPoli
 
 Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(other.facilityOptions), 
             life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()), status(other.getStatus()){}
+// Rule of 5-ish
+
+// Move Constructor
+Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(other.facilityOptions), 
+        life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()), status(other.getStatus()) {
+     other.selectionPolicy = nullptr;
+     other.facilities.clear();
+     other.underConstruction.clear();
+}
+
+// Distructor
+Plan:: ~Plan() {
+    delete selectionPolicy;
+    for(Facility* f : facilities) {
+        delete f;
+    }
+    facilities.clear();
+    for(Facility* uc : underConstruction) {
+        delete uc;
+    }
+    underConstruction.clear();
+}
 
 // Make sure theres no memory leak and that the method works
 void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
@@ -89,6 +111,10 @@ const vector<Facility*>& Plan:: getUnderConstructionFacilities() const {
     return underConstruction;
 }
 
+const vector<FacilityType>& Plan:: getFacilityOptions() const {
+    return facilityOptions;
+}
+
 const SelectionPolicy& Plan:: getSelectionPolicy() const {
     return *selectionPolicy;
 }
@@ -102,7 +128,11 @@ const Settlement& Plan:: getSettlment() const {
 }
 
 const string Plan:: toString() const {
-    return "Plan.toString() returns the plan's id for now: " + to_string(plan_id);
+    return "PlanID: " + to_string(plan_id)
+            + "\nSettlementName: " + settlement.getName()
+            + "\nLifeQuality_Score: " + to_string(getlifeQualityScore())
+            + "\nEconomy_Score: " + to_string(getEconomyScore())
+            + "\nEnvironment_Score: " + to_string(getEnvironmentScore());
 }
 
 const int Plan::getlifeQualityScore() const {

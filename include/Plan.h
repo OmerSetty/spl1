@@ -14,6 +14,16 @@ class Plan {
     public:
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
         Plan(const Plan& other);
+        
+        // Rule of 3
+        Plan(Plan&& other);
+        Plan& operator=(const Plan& other) = delete; // maybe should be void?
+        ~Plan();    // Destructor
+
+        ////////////////////////////////////////////////////////////////////////////////////////
+
+        // Methods
+
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;
@@ -25,6 +35,7 @@ class Plan {
         void printStatus();
         const vector<Facility*> &getFacilities() const;
         const vector<Facility*> &getUnderConstructionFacilities() const;
+        const vector<FacilityType>& getFacilityOptions() const;
         void addFacility(Facility* facility);
         const string toString() const;
 
@@ -34,7 +45,6 @@ class Plan {
     //     // Destructor
     //     ~Plan();
     //     // Assignment Opertaor
-        Plan& Opertaor=(const Plan& other) = delete; // maybe should be void?
     //     // Move Constructor
         const SelectionPolicy& getSelectionPolicy() const;
         bool hasLeftCapacity();

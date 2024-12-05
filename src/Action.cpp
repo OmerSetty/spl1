@@ -26,6 +26,7 @@ void BaseAction:: complete() {
 void BaseAction:: error(string errorMsg) {
     status = ActionStatus:: ERROR;
     (*this).errorMsg = errorMsg;
+    cout << "ERROR" + errorMsg;
 }
 
 const string& BaseAction:: getErrorMsg() const {
@@ -258,12 +259,13 @@ const string PrintActionsLog:: toString() const {
 
 // Close methods
 
-Close:: Close() {
-
-}
+Close:: Close() : BaseAction() {}
 
 void Close:: act(Simulation &simulation) {
-
+    simulation.setIsRunning(false);
+    for (Plan plan : simulation.getPlans()) {
+        cout << plan.toString() << endl;
+    }
 }
 
 Close* Close:: clone() const {
@@ -281,7 +283,12 @@ const string Close:: toString() const {
 BackupSimulation:: BackupSimulation() {}
 
 void BackupSimulation:: act(Simulation &simulation) {
-    *backup = simulation;
+    if (backup == nullptr) {
+        backup = new Simulation(simulation);
+    }
+    else {
+        *backup = simulation;
+    }
     complete();
 }
 

@@ -19,6 +19,7 @@ class Simulation {
         Simulation(Simulation&& other);
         Simulation& operator=(const Simulation& other);
         Simulation& operator=(Simulation&& other);
+        ~Simulation();
         void start();
         void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
         void addAction(BaseAction *action);
@@ -28,11 +29,13 @@ class Simulation {
         Settlement &getSettlement(const string &settlementName);
         bool isPlanExists(const int planID);
         Plan &getPlan(const int planID);
+        const vector<Plan>& getPlans() const;
         void step();
         void addConfigObject(vector<string> parsedArgs);
         void close();
         void open();
         void printSimulationStatus();
+        void setIsRunning(bool isRunningStatus);
         const vector<BaseAction*>& getActionsLog() const;
 
     private:

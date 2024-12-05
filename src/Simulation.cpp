@@ -127,6 +127,18 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
     }
 }
 
+// Rule of 5
+// Distructor
+Simulation:: ~Simulation() {
+    for(BaseAction* action : actionsLog) {
+        delete action;
+    }
+    actionsLog.clear();
+    for(Settlement* settlement : settlements) {
+        delete settlement;
+    }
+    settlements.clear();
+}
 
 void Simulation:: open() {
     while(isRunning) {
@@ -171,6 +183,10 @@ void Simulation:: open() {
         if(!isPrintActionsLog)
             actionsLog.push_back(action);
     }
+}
+
+void Simulation::setIsRunning(bool isRunningStatus) {
+    isRunning = isRunningStatus;
 }
 
 void Simulation:: start() {
@@ -234,6 +250,10 @@ Plan& Simulation:: getPlan(const int planID) {
         if(p.getPlanID() == planID)
             return p;
     }
+}
+
+const vector<Plan>& Simulation:: getPlans() const {
+    return plans;
 }
 
 void Simulation:: step() {
