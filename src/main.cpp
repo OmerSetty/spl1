@@ -68,15 +68,14 @@ int main(int argc, char** argv){
         cout << "usage: simulation <config_path>" << endl;
         return 0;
     }
-    // string configurationFile = argv[1];
-    // Simulation simulation(configurationFile);
+    string configurationFile = argv[1];
+    Simulation simulation(configurationFile);
     // simulation.printSimulationStatus();
-    
 
-    // simulation.start();
-    // if(backup!=nullptr){
-    // 	delete backup;
-    // 	backup = nullptr;
-    // }
+    simulation.start();
+    if(backup!=nullptr){
+    	delete backup;
+    	backup = nullptr;
+    }
     return 0;
 }

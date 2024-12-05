@@ -18,6 +18,7 @@ class Plan {
         // Rule of 3
         Plan(Plan&& other);
         Plan& operator=(const Plan& other) = delete; // maybe should be void?
+        Plan& operator=(const Plan&& other) = delete; // maybe should be void?
         ~Plan();    // Destructor
 
         ////////////////////////////////////////////////////////////////////////////////////////

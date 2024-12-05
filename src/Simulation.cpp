@@ -56,7 +56,11 @@ Simulation& Simulation:: operator=(const Simulation &other) {
         for (BaseAction* action: other.actionsLog) {
             actionsLog.push_back((*action).clone());
         }
-        plans = other.plans;
+        // plans = other.plans;
+        plans.clear();
+        for (Plan plan : other.plans) {
+            plans.push_back(plan);
+        }
         for (Settlement* settlement: settlements) {
             delete settlement;
         }
@@ -65,7 +69,12 @@ Simulation& Simulation:: operator=(const Simulation &other) {
             settlements.push_back(settlement);
             settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
         }
-        facilitiesOptions = other.facilitiesOptions;
+        facilitiesOptions.clear();
+        for (FacilityType facilityType : other.facilitiesOptions) {
+            facilitiesOptions.push_back(facilityType);
+        }
+
+        // facilitiesOptions = other.facilitiesOptions;
     }
     return *this;
 }
@@ -81,9 +90,7 @@ Simulation& Simulation:: operator=(Simulation &&other) {
         actionsLog = other.actionsLog;
         // clear or nullptr?
         other.actionsLog.clear();
-
-        plans = other.plans;
-
+        plans = move(other.plans); // make sure
         for (Settlement* settlement: settlements) {
             delete settlement;
         }
@@ -91,7 +98,7 @@ Simulation& Simulation:: operator=(Simulation &&other) {
         // clear or nullptr?
         other.settlements.clear();
 
-        facilitiesOptions = other.facilitiesOptions;
+        facilitiesOptions = move(other.facilitiesOptions); // make sure
     }
     return *this;
 }

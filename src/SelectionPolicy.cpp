@@ -81,10 +81,6 @@ const string BalancedSelection:: toString() const {
     return "Balanced Selection";
 }
 
-BalancedSelection* BalancedSelection::clone() const {
-    return new BalancedSelection(*this);
-}
-
 // EconomySelection implementations
 EconomySelection::EconomySelection() : lastSelectedIndex(0) {}
 
