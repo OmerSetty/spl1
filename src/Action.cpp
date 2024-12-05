@@ -34,8 +34,10 @@ const string& BaseAction:: getErrorMsg() const {
 }
 
 const string& BaseAction:: actionStatusToString() const {
-    if(getStatus() == ActionStatus:: COMPLETED)
+    if(getStatus() == ActionStatus:: COMPLETED) {
+        cout << "inside if" << endl;
         return "COMPLETED";
+    }
     return "ERROR";
 }
 
@@ -164,21 +166,46 @@ AddFacility* AddFacility:: clone() const {
 PrintPlanStatus:: PrintPlanStatus(int planId) : planId(planId) {}
 
 void PrintPlanStatus:: act(Simulation &simulation) {
+    cout << "start of PrintPlanStatus act" << endl;
     if (!simulation.isPlanExists(planId)) {
-        error("Cannot change selection policy");
+        cout << "PrintPlanStatus act 1" << endl;
+        error("Plan doesn’t exist");
         return;
     }
+    cout << "PrintPlanStatus act 2" << endl;
     Plan& plan = simulation.getPlan(planId);
-    string planStatus = "PlanID: " + to_string(planId) + "\nSettlementName: " + plan.getSettlment().getName() +
-        "\nPlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) + "\nSelectionPolicy: " + plan.getSelectionPolicy().toString()
-        + "\nLifeQualityScore: " + to_string(plan.getlifeQualityScore()) + "\nEconomyScore: " + to_string(plan.getEconomyScore()) + "EnvrionmentScore: "
-        + to_string(plan.getEnvironmentScore());
+    cout << "plan tostring: " + plan.toString() << endl;
+    cout << "PrintPlanStatus act 3" << endl;
+    cout << "PlanID: " + to_string(planId) << endl;
+    cout << "SettlementName: " + plan.getSettlment().getName() << endl;
+    cout << "PlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) << endl;
+    cout << "SelectionPolicy: " + plan.getSelectionPolicy().toString() << endl;
+    cout << "LifeQualityScore: " + to_string(plan.getlifeQualityScore()) << endl;
+    cout << "EconomyScore: " + to_string(plan.getEconomyScore()) << endl;
+    cout << "EnvrionmentScore: " + to_string(plan.getEnvironmentScore()) << endl;
+    // cout << "SettlementName: " << endl;
+    // cout << "PlanStatus: " << endl;
+    // cout << "SelectionPolicy: " << endl;
+    // cout << "LifeQualityScore: " << endl;
+    // cout << "EconomyScore: " << endl;
+    // cout << "EnvrionmentScore: " << endl;
+
+    string planStatus = 
+        "PlanID: " + to_string(planId) +
+        "\nSettlementName: " + plan.getSettlment().getName() +
+        "\nPlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) +
+        "\nSelectionPolicy: " + plan.getSelectionPolicy().toString()
+        + "\nLifeQualityScore: " + to_string(plan.getlifeQualityScore()) +
+        "\nEconomyScore: " + to_string(plan.getEconomyScore()) +
+        "EnvrionmentScore: " + to_string(plan.getEnvironmentScore());
+    cout << "PrintPlanStatus act 4" << endl;
     for (const Facility* facility: plan.getFacilities()) {
         planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS";
     }
     for (const Facility* facility: plan.getUnderConstructionFacilities()) {
         planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION";
     }
+    cout << "PrintPlanStatus act 5" << endl;
     complete();
 }
 PrintPlanStatus* PrintPlanStatus:: clone() const {

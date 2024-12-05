@@ -14,6 +14,7 @@ class Auxiliary{
         static vector<string> parseArguments(const string& line);
         static string facilityStatusAsString(FacilityStatus status);
         static FacilityCategory getFacilityCategoryStringAsFacilityCategory(string status);
+        static string facilityCategoryToString(FacilityCategory status);
         static SettlementType getSettlementTypeStringAsSettlementType(string status);
         static string getPlanStatusAsString(PlanStatus status);
         static string settlementTypeToString(SettlementType type);

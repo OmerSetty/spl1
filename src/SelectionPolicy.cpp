@@ -7,6 +7,7 @@
 
 #include "Facility.h"
 #include "SelectionPolicy.h"
+#include "Auxiliary.h"
 
 using std::string;
 using std::vector;

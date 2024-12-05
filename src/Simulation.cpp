@@ -19,12 +19,10 @@ class SelectionPolicy;
 class Auxiliary;
 class Settlement;
 
-Simulation::Simulation(const string &configFilePath) : isRunning(false) {
-    cout << "in simulation constructor" << endl;
+Simulation::Simulation(const string &configFilePath) : isRunning(false), planCounter(0) {
     std::ifstream file(configFilePath);
     string currentLine;
     while (std::getline(file, currentLine)) {
-        cout << currentLine << endl;
         vector<string> parsedArgs = Auxiliary::parseArguments(currentLine);
         addConfigObject(parsedArgs);
     }
@@ -104,20 +102,16 @@ Simulation& Simulation:: operator=(Simulation &&other) {
 }
 
 void Simulation::addConfigObject(vector<string> parsedArgs) {
-    // cout << "in addCONfigObject" << endl;
     const string typeOfObject = parsedArgs[0];
     // NOT SURE - who should delete the values on the heap?
     if (typeOfObject == "settlement") {
-        cout << "in settlement" << endl;
         addSettlement(new Settlement(parsedArgs[1], Auxiliary::getSettlementTypeStringAsSettlementType(parsedArgs[2])));
     } 
     else if (typeOfObject == "facility") {
-        cout << "in facility" << endl;
         addFacility(FacilityType(parsedArgs[1], Auxiliary::getFacilityCategoryStringAsFacilityCategory(parsedArgs[2]), stoi(parsedArgs[3]), 
                                                                     stoi(parsedArgs[4]), stoi(parsedArgs[5]), stoi(parsedArgs[6])));
     }
     else if (typeOfObject == "plan") {
-        cout << "in plan" << endl;
         const string selectionPolicyType = parsedArgs[2];
         if (selectionPolicyType == "nve") {
             addPlan(getSettlement(parsedArgs[1]), new NaiveSelection());
@@ -150,7 +144,9 @@ Simulation:: ~Simulation() {
 void Simulation:: open() {
     while(isRunning) {
         string input;
-        cin >> input;
+        // cin >> input;
+        // cin.ignore();
+        getline(cin, input);
         vector<string> inputArguments = Auxiliary:: parseArguments(input);
         BaseAction* action;
         vector<string>& ia = inputArguments;
@@ -167,10 +163,11 @@ void Simulation:: open() {
         else if(ia[0] == "facility") {
             action = new AddFacility(ia[1], Auxiliary:: getFacilityCategoryStringAsFacilityCategory(ia[2]), stoi(ia[3]), stoi(ia[4]), stoi(ia[5]), stoi(ia[6]));
         }
-        else if(ia[0] == " planStatus") {
+        else if(ia[0] == "planStatus") {
+            cout << ia[1] << endl;
             action = new PrintPlanStatus(stoi(ia[1]));
         }
-        else if(ia[0] == " changePolicy") {
+        else if(ia[0] == "changePolicy") {
             action = new ChangePlanPolicy(stoi(ia[1]), ia[2]);
         }
         else if(ia[0] == "log") {
@@ -253,9 +250,17 @@ const vector<BaseAction*>& Simulation:: getActionsLog() const {
 }
 
 Plan& Simulation:: getPlan(const int planID) {
-    for(Plan p : plans) {
-        if(p.getPlanID() == planID)
-            return p;
+    for(Plan plan : plans) {
+        if(plan.getPlanID() == planID) {
+            cout << "planId: " + to_string(plan.getPlanID()) << endl;
+            cout << "SettlementName: " + plan.getSettlment().getName() << endl;
+            cout << "PlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) << endl;
+            cout << "SelectionPolicy: " + plan.getSelectionPolicy().toString() << endl;
+            cout << "LifeQualityScore: " + to_string(plan.getlifeQualityScore()) << endl;
+            cout << "EconomyScore: " + to_string(plan.getEconomyScore()) << endl;
+            cout << "EnvrionmentScore: " + to_string(plan.getEnvironmentScore()) << endl;
+            return plan;
+        }
     }
 }
 

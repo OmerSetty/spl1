@@ -49,7 +49,8 @@ Facility::Facility(const string &name, const string &settlementName, const Facil
 
 // Partial
 Facility:: Facility(const FacilityType &type, const string &settlementName) :
-    Facility(type.getName(), getSettlementName(), type.getCategory(), type.getCost(), type.getLifeQualityScore(), type.getEconomyScore(), type.getEnvironmentScore()) {}
+    Facility(type.getName(), settlementName, type.getCategory(), type.getCost(), type.getLifeQualityScore(), type.getEconomyScore(), type.getEnvironmentScore()) {
+    }
 
 const string& Facility::getSettlementName() const {
     return settlementName;
@@ -67,9 +68,7 @@ const FacilityStatus& Facility::getStatus() const {
 FacilityStatus Facility::step() {
     if (getStatus() == FacilityStatus:: UNDER_CONSTRUCTIONS) {
         timeLeft--;
-        cout << "timeleft: " + to_string(timeLeft) << endl;
         if (timeLeft == 0) {
-            cout << "finished" << endl;
             setStatus(FacilityStatus:: OPERATIONAL);
         }
     }

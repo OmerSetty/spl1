@@ -47,7 +47,6 @@ Plan:: ~Plan() {
 // Make sure theres no memory leak and that the method works
 void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
     if (getSelectionPolicy().toString() !=  (*selectionPolicy).toString()) {
-        cout << "old selection policy " + getSelectionPolicy().toString() + " new selection policy " + (*selectionPolicy).toString() << endl;
         delete (*this).selectionPolicy;
         (*this).selectionPolicy = selectionPolicy;
         selectionPolicy = nullptr;
@@ -72,8 +71,8 @@ void Plan:: addFacility(Facility* facility) {
 
 void Plan:: step() {
     vector<Facility*>& u = underConstruction;
-    for(int i = 0; i < u.size(); i++) {
-        (*u[i]).step();
+    for (Facility* uc : u) {
+        (*uc).step();
     }
     while(status == PlanStatus::AVALIABLE) {
         const FacilityType& nextFacilityType = (*selectionPolicy).selectFacility(facilityOptions);
@@ -89,9 +88,6 @@ void Plan:: step() {
         if((*u[i]).getStatus() == FacilityStatus::OPERATIONAL) {
             addFacility(u[i]);
         }
-    }
-    for(int i = 0; i < u.size(); i++) {
-        cout << (*u[i]).toString() << endl;
     }
 }
 
@@ -124,6 +120,7 @@ const int Plan:: getPlanID() const {
 }
 
 const Settlement& Plan:: getSettlment() const {
+    cout << "in get settlement: " + settlement.getName() << endl;
     return settlement;
 }
 

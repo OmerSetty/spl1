@@ -32,15 +32,36 @@ string Auxiliary::facilityStatusAsString (FacilityStatus status) {
 }
 
 FacilityCategory Auxiliary::getFacilityCategoryStringAsFacilityCategory (string status) {
-    if (status == "LIFE_QUALITY") return FacilityCategory::LIFE_QUALITY;
-    else if (status == "ECONOMY") return FacilityCategory::ECONOMY;
-    else if (status == "ENVIRONMENT") return FacilityCategory::ENVIRONMENT;
+    if (status == "0") {
+        return FacilityCategory::LIFE_QUALITY;
+    }
+    else if (status == "1") {
+        return FacilityCategory::ECONOMY;
+    }
+    else if (status == "2") {
+        return FacilityCategory::ENVIRONMENT;
+    }
+}
+string Auxiliary::facilityCategoryToString (FacilityCategory status) {
+    if (status == FacilityCategory::LIFE_QUALITY){
+        cout << "in if: FacilityCategory::LIFE_QUALITY";
+        return "LIFE_QUALITY";
+    } 
+    if (status == FacilityCategory::ECONOMY){
+        cout << "in if: FacilityCategory::ECONOMY";
+        return "ECONOMY";
+    }   
+    if (status == FacilityCategory::ENVIRONMENT){
+        cout << "in if: FacilityCategory::ENVIRONMENT";
+        return "ENVIRONMENT";
+    } 
+        
 }
 
 SettlementType Auxiliary::getSettlementTypeStringAsSettlementType (string status) {
-    if (status == "VILLAGE") return SettlementType::VILLAGE;
-    else if (status == "CITY") return SettlementType::CITY;
-    else if (status == "METROPOLIS") return SettlementType::METROPOLIS;
+    if (status == "0") return SettlementType::VILLAGE;
+    else if (status == "1") return SettlementType::CITY;
+    else if (status == "2") return SettlementType::METROPOLIS;
 }
 
 string Auxiliary::getPlanStatusAsString (PlanStatus status) {

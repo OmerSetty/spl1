@@ -19,27 +19,27 @@ int main(int argc, char** argv){
     // cout << "Hello World!5" << endl;
     
 
-    const string s = "abc";
-    Settlement settlement = Settlement(s, SettlementType::METROPOLIS);
-    // cout << settlement.getName() << endl;
-                                                                              // 1, 1, 2         
-    FacilityType facilityT = FacilityType("setty", FacilityCategory::ECONOMY, 20, 3, 7, 5);//4,8,7=3
-    FacilityType facilityT2 = FacilityType("setty2", FacilityCategory::ENVIRONMENT, 3, 6, 4, 6);//7,5,8=3
-    FacilityType facilityT3 = FacilityType("setty3", FacilityCategory::ENVIRONMENT, 8, 2, 3, 0);//3,4,2=2
-    FacilityType facilityT4 = FacilityType("setty4", FacilityCategory::ECONOMY, 20, 5, 5, 4);//3,4,6=3
-    FacilityType facilityT5 = FacilityType("setty5", FacilityCategory::ENVIRONMENT, 20, 4, 7, 3);//5,8,5=3
-    FacilityType facilityT6 = FacilityType("setty6", FacilityCategory::ECONOMY, 20, 4, 4, 4);//5,5,6=1
+    // const string s = "abc";
+    // Settlement settlement = Settlement(s, SettlementType::METROPOLIS);
+    // // cout << settlement.getName() << endl;
+    //                                                                           // 1, 1, 2         
+    // FacilityType facilityT = FacilityType("setty", FacilityCategory::ECONOMY, 20, 3, 7, 5);//4,8,7=3
+    // FacilityType facilityT2 = FacilityType("setty2", FacilityCategory::ENVIRONMENT, 3, 6, 4, 6);//7,5,8=3
+    // FacilityType facilityT3 = FacilityType("setty3", FacilityCategory::ENVIRONMENT, 8, 2, 3, 0);//3,4,2=2
+    // FacilityType facilityT4 = FacilityType("setty4", FacilityCategory::ECONOMY, 20, 5, 5, 4);//3,4,6=3
+    // FacilityType facilityT5 = FacilityType("setty5", FacilityCategory::ENVIRONMENT, 20, 4, 7, 3);//5,8,5=3
+    // FacilityType facilityT6 = FacilityType("setty6", FacilityCategory::ECONOMY, 20, 4, 4, 4);//5,5,6=1
 
-    Facility facility = Facility("abc", settlement.getName(),
-        FacilityCategory::LIFE_QUALITY, 10, 3, 5, 2);
-    Facility facility2 = Facility("def", settlement.getName(),
-        FacilityCategory::LIFE_QUALITY, 10, 3, 5, 2);
-    // cout << facility.toString() << endl;
+    // Facility facility = Facility("abc", settlement.getName(),
+    //     FacilityCategory::LIFE_QUALITY, 10, 3, 5, 2);
+    // Facility facility2 = Facility("def", settlement.getName(),
+    //     FacilityCategory::LIFE_QUALITY, 10, 3, 5, 2);
+    // // cout << facility.toString() << endl;
     
-    vector<FacilityType> facilitiesOptions = { facilityT, facilityT2, facilityT3,
-        facilityT4, facilityT5, facilityT6 };
-    // NaiveSelection ns = NaiveSelection();
-    BalancedSelection bs = BalancedSelection(1, 1, 2);
+    // vector<FacilityType> facilitiesOptions = { facilityT, facilityT2, facilityT3,
+    //     facilityT4, facilityT5, facilityT6 };
+    // // NaiveSelection ns = NaiveSelection();
+    // BalancedSelection bs = BalancedSelection(1, 1, 2);
     // cout << bs.selectFacility(facilitiesOptions).getName() << endl;
     // cout << bs.selectFacility(facilitiesOptions).getName() << endl;
     // cout << bs.selectFacility(facilitiesOptions).getName() << endl;
