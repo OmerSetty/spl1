@@ -166,30 +166,11 @@ AddFacility* AddFacility:: clone() const {
 PrintPlanStatus:: PrintPlanStatus(int planId) : planId(planId) {}
 
 void PrintPlanStatus:: act(Simulation &simulation) {
-    cout << "start of PrintPlanStatus act" << endl;
     if (!simulation.isPlanExists(planId)) {
-        cout << "PrintPlanStatus act 1" << endl;
         error("Plan doesn’t exist");
         return;
     }
-    cout << "PrintPlanStatus act 2" << endl;
     Plan& plan = simulation.getPlan(planId);
-    cout << "plan tostring: " + plan.toString() << endl;
-    cout << "PrintPlanStatus act 3" << endl;
-    cout << "PlanID: " + to_string(planId) << endl;
-    cout << "SettlementName: " + plan.getSettlment().getName() << endl;
-    cout << "PlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) << endl;
-    cout << "SelectionPolicy: " + plan.getSelectionPolicy().toString() << endl;
-    cout << "LifeQualityScore: " + to_string(plan.getlifeQualityScore()) << endl;
-    cout << "EconomyScore: " + to_string(plan.getEconomyScore()) << endl;
-    cout << "EnvrionmentScore: " + to_string(plan.getEnvironmentScore()) << endl;
-    // cout << "SettlementName: " << endl;
-    // cout << "PlanStatus: " << endl;
-    // cout << "SelectionPolicy: " << endl;
-    // cout << "LifeQualityScore: " << endl;
-    // cout << "EconomyScore: " << endl;
-    // cout << "EnvrionmentScore: " << endl;
-
     string planStatus = 
         "PlanID: " + to_string(planId) +
         "\nSettlementName: " + plan.getSettlment().getName() +
@@ -197,15 +178,16 @@ void PrintPlanStatus:: act(Simulation &simulation) {
         "\nSelectionPolicy: " + plan.getSelectionPolicy().toString()
         + "\nLifeQualityScore: " + to_string(plan.getlifeQualityScore()) +
         "\nEconomyScore: " + to_string(plan.getEconomyScore()) +
-        "EnvrionmentScore: " + to_string(plan.getEnvironmentScore());
-    cout << "PrintPlanStatus act 4" << endl;
+        "\nEnvrionmentScore: " + to_string(plan.getEnvironmentScore());
     for (const Facility* facility: plan.getFacilities()) {
-        planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS";
+        planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS");
+        // planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS";
     }
     for (const Facility* facility: plan.getUnderConstructionFacilities()) {
-        planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION";
+        planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION");
+        // planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION";
     }
-    cout << "PrintPlanStatus act 5" << endl;
+    cout << planStatus << endl;
     complete();
 }
 PrintPlanStatus* PrintPlanStatus:: clone() const {

@@ -250,18 +250,18 @@ const vector<BaseAction*>& Simulation:: getActionsLog() const {
 }
 
 Plan& Simulation:: getPlan(const int planID) {
-    for(Plan plan : plans) {
-        if(plan.getPlanID() == planID) {
-            cout << "planId: " + to_string(plan.getPlanID()) << endl;
-            cout << "SettlementName: " + plan.getSettlment().getName() << endl;
-            cout << "PlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) << endl;
-            cout << "SelectionPolicy: " + plan.getSelectionPolicy().toString() << endl;
-            cout << "LifeQualityScore: " + to_string(plan.getlifeQualityScore()) << endl;
-            cout << "EconomyScore: " + to_string(plan.getEconomyScore()) << endl;
-            cout << "EnvrionmentScore: " + to_string(plan.getEnvironmentScore()) << endl;
-            return plan;
+    for (int i = 0; i < plans.size(); i++) {
+        if(plans[i].getPlanID() == planID) {
+            return plans[i];
         }
     }
+    
+    // for(Plan plan : plans) {
+    //     if(plan.getPlanID() == planID) {
+    //         Plan* returnedPlan = new Plan(plan);
+    //         return *returnedPlan;
+    //     }
+    // }
 }
 
 const vector<Plan>& Simulation:: getPlans() const {
@@ -269,9 +269,12 @@ const vector<Plan>& Simulation:: getPlans() const {
 }
 
 void Simulation:: step() {
-    for(Plan p : plans) {
-        p.step();
+    for (int i = 0; i < plans.size(); i++) {
+        plans[i].step();
     }
+    // for(Plan p : plans) {
+    //     p.step();
+    // }
 }
 
 void Simulation:: printSimulationStatus() {

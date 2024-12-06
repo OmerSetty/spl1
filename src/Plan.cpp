@@ -120,7 +120,6 @@ const int Plan:: getPlanID() const {
 }
 
 const Settlement& Plan:: getSettlment() const {
-    cout << "in get settlement: " + settlement.getName() << endl;
     return settlement;
 }
 

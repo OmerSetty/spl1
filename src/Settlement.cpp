@@ -14,7 +14,6 @@ Settlement::Settlement(const string &newName, SettlementType newType) :
                         name(newName), type(newType) {}
 
 const string& Settlement::getName() const {
-    cout << "in getName: " + name << endl;
     return name;
 }
 
