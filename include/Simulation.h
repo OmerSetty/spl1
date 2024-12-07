@@ -30,6 +30,10 @@ class Simulation {
         bool isPlanExists(const int planID);
         Plan &getPlan(const int planID);
         const vector<Plan>& getPlans() const;
+        const vector<Settlement*>& getSettlements() const;
+        const vector<FacilityType>& getFacilityOptions() const;
+        const bool getIsRunning() const;
+        const int getPlanCounter() const;
         void step();
         void addConfigObject(vector<string> parsedArgs);
         void close();

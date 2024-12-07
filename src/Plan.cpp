@@ -21,16 +21,30 @@ Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPoli
 
 Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
         facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
-        life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {}
+        life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {
+            for (size_t i = 0; i < other.facilities.size(); i++) {
+                facilities.push_back(new Facility(*other.facilities[i]));
+            }
+            for (size_t i = 0; i < other.underConstruction.size(); i++) {
+                underConstruction.push_back(new Facility(*other.underConstruction[i]));
+            }
+        }
 // Rule of 5-ish
 
 // Move Constructor
 Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
-        facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
+        facilities(other.facilities), underConstruction(other.underConstruction), facilityOptions(other.facilityOptions), 
         life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {
-     other.selectionPolicy = nullptr;
-     other.facilities.clear();
-     other.underConstruction.clear();
+    // for (size_t i = 0; i < other.facilities.size(); i++) {
+    //     facilities.push_back(other.facilities[i]);
+    // }
+    // for (size_t i = 0; i < other.underConstruction.size(); i++) {
+    //     underConstruction.push_back(other.underConstruction[i]);
+    // }
+    other.selectionPolicy = nullptr;
+    other.facilities.clear();
+    other.underConstruction.clear();
+    // other.facilitiesOptions.clear();
 }
 
 // Distructor
@@ -57,6 +71,18 @@ void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
 
 void Plan:: setStatus(PlanStatus newStatus) {
     status = newStatus;
+}
+
+void Plan:: deleteSelectionPolicy() {
+    delete selectionPolicy;
+}
+
+void Plan:: clearFacilities() {
+    facilities.clear();
+}
+
+void Plan:: clearUnderConstruction() {
+    underConstruction.clear();
 }
 
 // Removes the facility from the underConstruction vector

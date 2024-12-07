@@ -29,75 +29,110 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
 }
 
 // should we initialize a vector of non-pointers like that? (e.g: plans, facilitiesOptons)
-Simulation::Simulation(const Simulation& other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(), plans(other.plans),
-        settlements(), facilitiesOptions(other.facilitiesOptions) {
-    for (BaseAction* action : other.actionsLog) {
-        actionsLog.push_back(action);
+Simulation::Simulation(const Simulation& other) : isRunning(other.getIsRunning()), planCounter(other.getPlanCounter()), actionsLog(), plans(),
+        settlements(), facilitiesOptions(other.getFacilityOptions()) {
+    for (BaseAction* action : other.getActionsLog()) {
+        actionsLog.push_back((*action).clone());
     }
-    for (Settlement* settlement : other.settlements) {
-        settlements.push_back(settlement);
+    for (Settlement* settlement : other.getSettlements()) {
+        // settlements.push_back(settlement);
+        settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
+    }
+    for (size_t i = 0; i < other.plans.size(); i++) {
+        plans.push_back(Plan(other.plans[i]));
     }
 }
 
-Simulation::Simulation(Simulation&& other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(other.actionsLog),
-            plans(other.plans), settlements(other.settlements), facilitiesOptions(other.facilitiesOptions) {
+Simulation::Simulation(Simulation&& other) : isRunning(other.getIsRunning()), planCounter(other.getPlanCounter()), actionsLog(other.getActionsLog()),
+            plans(other.getPlans()), settlements(other.getSettlements()), facilitiesOptions(other.getFacilityOptions()) {
     other.actionsLog.clear();
     other.settlements.clear();
+    other.plans.clear();
+    // other.facilitiesOptions.clear();
 }
 
 Simulation& Simulation:: operator=(const Simulation &other) {
     if (this != &other) {
-        isRunning = other.isRunning;
-        planCounter = other.planCounter;
+        isRunning = other.getIsRunning();
+        planCounter = other.getPlanCounter();
         for (BaseAction* action: actionsLog) {
             delete action;
         }
-        for (BaseAction* action: other.actionsLog) {
+        for (BaseAction* action: other.getActionsLog()) {
             actionsLog.push_back((*action).clone());
         }
         // plans = other.plans;
+        // for (size_t i = 0; i < plans.size(); i++) {
+        //     Plan& p = plans[i];
+        //     delete &p;
+        //     p.deleteSelectionPolicy();
+
+        //     for (size_t j = 0; j < p.getFacilities().size(); j++) {
+        //         delete p.getFacilities()[j];
+        //     }
+        //     p.clearFacilities();
+
+        //     for (size_t j = 0; j < p.getUnderConstructionFacilities().size(); j++) {
+        //         delete p.getUnderConstructionFacilities()[j];
+        //     }
+        //     p.clearUnderConstruction();
+        // }
         plans.clear();
-        for (Plan plan : other.plans) {
-            plans.push_back(plan);
+        
+        for (size_t i = 0; i < other.plans.size(); i++) {
+            plans.push_back(Plan(other.plans[i]));
         }
+        
         for (Settlement* settlement: settlements) {
             delete settlement;
         }
-        for (Settlement* settlement: other.settlements) {
+        settlements.clear();
 
-            settlements.push_back(settlement);
+        for (Settlement* settlement: other.getSettlements()) {
             settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
         }
         facilitiesOptions.clear();
-        for (FacilityType facilityType : other.facilitiesOptions) {
-            facilitiesOptions.push_back(facilityType);
+        for (size_t i = 0; i < other.getFacilityOptions().size(); i++) {
+            // facilitiesOptions.push_back(Facility(other.getFacilityOptions()[i]));
+            facilitiesOptions.push_back(other.getFacilityOptions()[i]);
         }
-
-        // facilitiesOptions = other.facilitiesOptions;
     }
     return *this;
 }
 
 Simulation& Simulation:: operator=(Simulation &&other) {
     if (this != &other) {
-        isRunning = other.isRunning;
-        planCounter = other.planCounter;
+        isRunning = other.getIsRunning();
+        planCounter = other.getPlanCounter();
 
         for (BaseAction* action: actionsLog) {
             delete action;
         }
-        actionsLog = other.actionsLog;
-        // clear or nullptr?
+        actionsLog = other.getActionsLog();
         other.actionsLog.clear();
-        plans = move(other.plans); // make sure
+
+        for (size_t i = 0; i < plans.size(); i++) {
+            Plan& p = plans[i];
+            delete &p;
+        }
+        plans.clear();
+        for (size_t i = 0; i < other.getPlans().size(); i++) {
+            plans.push_back(other.getPlans()[i]);
+        }
+        other.plans.clear();
+
         for (Settlement* settlement: settlements) {
             delete settlement;
         }
-        settlements = other.settlements;
-        // clear or nullptr?
+        
+        settlements = other.getSettlements();
         other.settlements.clear();
 
-        facilitiesOptions = move(other.facilitiesOptions); // make sure
+        // facilitiesOptions = other.facilitiesOptions;
+        facilitiesOptions.clear();
+        for (size_t i = 0; i < other.facilitiesOptions.size(); i++) {
+            facilitiesOptions.push_back(other.getFacilityOptions()[i]);
+        }
     }
     return *this;
 }
@@ -134,11 +169,18 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
 // Rule of 5
 // Distructor
 Simulation:: ~Simulation() {
-    for(BaseAction* action : actionsLog) {
-        delete action;
+    // if (actionsLog.size() > 0) {
+    if (actionsLog.size() > size_t(0)) {
+        for (BaseAction* action : actionsLog) {
+            delete action;
+        }
+        actionsLog.clear();
     }
-    actionsLog.clear();
-    for(Settlement* settlement : settlements) {
+    // for (size_t i = 0; i < plans.size(); i++) {
+    //     Plan& p = plans[i];
+    //     delete &p;
+    // }
+    for (Settlement* settlement : settlements) {
         delete settlement;
     }
     settlements.clear();
@@ -167,7 +209,6 @@ void Simulation:: open() {
             action = new AddFacility(ia[1], Auxiliary:: stringToFacilityCategory(ia[2]), stoi(ia[3]), stoi(ia[4]), stoi(ia[5]), stoi(ia[6]));
         }
         else if(ia[0] == "planStatus") {
-            cout << ia[1] << endl;
             action = new PrintPlanStatus(stoi(ia[1]));
         }
         else if(ia[0] == "changePolicy") {
@@ -273,23 +314,39 @@ const vector<Plan>& Simulation:: getPlans() const {
     return plans;
 }
 
+const vector<Settlement*>& Simulation::getSettlements() const {
+    return settlements;
+}
+
+const vector<FacilityType>& Simulation::getFacilityOptions() const {
+    return facilitiesOptions;
+}
+
+const bool Simulation::getIsRunning() const {
+    return isRunning;
+}
+
+const int Simulation::getPlanCounter() const {
+    return planCounter;
+}
+
 void Simulation:: step() {
     for (size_t i = 0; i < plans.size(); i++) {
         plans[i].step();
     }
-    // for(Plan p : plans) {
-    //     p.step();
-    // }
 }
 
 void Simulation:: printSimulationStatus() {
-    for(Plan p : plans) {
-        cout << "PlanID: " + to_string(p.getPlanID()) << endl;
-        cout << "SettlementName: " + p.getSettlment().getName() << endl;
-        cout << "LifeQuality_Score:" + to_string(p.getlifeQualityScore()) << endl;
-        cout << "Economy_Score:" + to_string(p.getEconomyScore()) << endl;
-        cout << "Environment_Score:" + to_string(p.getEnvironmentScore()) << endl;
-    }  
+    for (size_t i = 0; i < plans.size(); i++) {
+        cout << plans[i].toString() << endl;
+    }
+    // for(Plan p : plans) {
+    //     cout << "PlanID: " + to_string(p.getPlanID()) << endl;
+    //     cout << "SettlementName: " + p.getSettlment().getName() << endl;
+    //     cout << "LifeQuality_Score:" + to_string(p.getlifeQualityScore()) << endl;
+    //     cout << "Economy_Score:" + to_string(p.getEconomyScore()) << endl;
+    //     cout << "Environment_Score:" + to_string(p.getEnvironmentScore()) << endl;
+    // }  
 }
 
 void Simulation:: close() {

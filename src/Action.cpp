@@ -25,7 +25,7 @@ void BaseAction:: complete() {
 void BaseAction:: error(string errorMsg) {
     status = ActionStatus:: ERROR;
     (*this).errorMsg = errorMsg;
-    cout << "ERROR" + errorMsg;
+    cout << "ERROR " + errorMsg << endl;
 }
 
 const string& BaseAction:: getErrorMsg() const {
@@ -53,7 +53,7 @@ void SimulateStep:: act(Simulation &simulation) {
 }
 
 const string SimulateStep:: SimulateStep:: toString() const {
-    return "step" + to_string(numOfSteps) + " " + actionStatusToString();
+    return "step " + to_string(numOfSteps) + " " + actionStatusToString();
 }
 
 SimulateStep* SimulateStep:: clone() const {
@@ -161,7 +161,7 @@ AddFacility* AddFacility:: clone() const {
 
 // PrintPlanStatus methods
 
-PrintPlanStatus:: PrintPlanStatus(int planId) : planId(planId) {}
+PrintPlanStatus:: PrintPlanStatus(int planId) : BaseAction(), planId(planId) {}
 
 void PrintPlanStatus:: act(Simulation &simulation) {
     if (!simulation.isPlanExists(planId)) {
@@ -178,8 +178,8 @@ void PrintPlanStatus:: act(Simulation &simulation) {
         "\nEconomyScore: " + to_string(plan.getEconomyScore()) +
         "\nEnvrionmentScore: " + to_string(plan.getEnvironmentScore());
     for (const Facility* facility: plan.getFacilities()) {
-        planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS");
-        // planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS";
+        planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONAL");
+        // planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONAL";
     }
     for (const Facility* facility: plan.getUnderConstructionFacilities()) {
         planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION");
@@ -193,7 +193,7 @@ PrintPlanStatus* PrintPlanStatus:: clone() const {
 }
 
 const string PrintPlanStatus:: toString() const {
-    return "planStatus" + to_string(planId) + " " + actionStatusToString();
+    return "planStatus " + to_string(planId) + " " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,10 +269,8 @@ const string PrintActionsLog:: toString() const {
 Close:: Close() : BaseAction() {}
 
 void Close:: act(Simulation &simulation) {
-    simulation.setIsRunning(false);
-    for (Plan plan : simulation.getPlans()) {
-        cout << plan.toString() << endl;
-    }
+    simulation.close();
+    complete();
 }
 
 Close* Close:: clone() const {
@@ -287,7 +285,7 @@ const string Close:: toString() const {
 
 // BackupSimulation methods
 
-BackupSimulation:: BackupSimulation() {}
+BackupSimulation:: BackupSimulation() : BaseAction() {}
 
 void BackupSimulation:: act(Simulation &simulation) {
     if (backup == nullptr) {

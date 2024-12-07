@@ -17,9 +17,9 @@ class Plan {
         
         // Rule of 3
         Plan(Plan&& other);
-        Plan& operator=(const Plan& other) = delete; // maybe should be void?
-        Plan& operator=(const Plan&& other) = delete; // maybe should be void?
-        ~Plan();    // Destructor
+        Plan& operator=(const Plan& other) = delete;
+        Plan& operator=(const Plan&& other) = delete;
+        ~Plan();
 
         ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +32,9 @@ class Plan {
         const Settlement& getSettlment() const;
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
         void setStatus(PlanStatus status);
+        void deleteSelectionPolicy();
+        void clearFacilities();
+        void clearUnderConstruction();
         void step();
         void printStatus();
         const vector<Facility*> &getFacilities() const;

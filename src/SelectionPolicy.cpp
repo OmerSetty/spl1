@@ -70,6 +70,9 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
             index = i;
         }
     }
+    LifeQualityScore = facilitiesOptions[index].getLifeQualityScore();
+    EconomyScore = facilitiesOptions[index].getEconomyScore();
+    EnvironmentScore = facilitiesOptions[index].getEnvironmentScore();
     return facilitiesOptions[index];
 }
 
@@ -88,8 +91,8 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
     while (facilitiesOptions[lastSelectedIndex].getCategory() != FacilityCategory::ECONOMY) {
         lastSelectedIndex = increaseIndex(lastSelectedIndex, facilitiesOptions.size());
     }
-    int currentIndex = lastSelectedIndex; 
-    increaseIndex(currentIndex, facilitiesOptions.size());
+    int currentIndex = lastSelectedIndex;
+    lastSelectedIndex = increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
 
@@ -112,7 +115,7 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
         lastSelectedIndex = increaseIndex(lastSelectedIndex, facilitiesOptions.size());
     }
     int currentIndex = lastSelectedIndex; 
-    increaseIndex(currentIndex, facilitiesOptions.size());
+    lastSelectedIndex = increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
 
