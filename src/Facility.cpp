@@ -1,6 +1,5 @@
 #include <iostream>
 #include <algorithm>
-#pragma once
 #include <string>
 #include <vector>
 #include <Facility.h>
@@ -76,8 +75,13 @@ FacilityStatus Facility::step() {
 }
 
 string getStatusAsString (FacilityStatus status) {
-    if (status == FacilityStatus::UNDER_CONSTRUCTIONS) return "UNDER_CONSTRUCTIONS";
-    if (status == FacilityStatus::OPERATIONAL) return "OPERATIONAL";
+    if (status == FacilityStatus::UNDER_CONSTRUCTIONS) {
+        return "UNDER_CONSTRUCTIONS";
+    }
+    if (status == FacilityStatus::OPERATIONAL) {
+        return "OPERATIONAL";
+    }
+    return "";
 }
 
 // NOT SURE - how to implement methods like

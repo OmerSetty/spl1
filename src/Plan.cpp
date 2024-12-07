@@ -1,6 +1,5 @@
 #include <iostream>
 #include <algorithm>
-#pragma once
 #include <string>
 #include <vector>
 #include <climits>
@@ -16,16 +15,19 @@ using std::vector;
 using namespace std;
 
 Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPolicy* currSelectionPolicy, const vector<FacilityType> &currFacilityOptions)
-    : plan_id(currPlanId), settlement(currSettlement), selectionPolicy(currSelectionPolicy), facilityOptions(currFacilityOptions),
-      life_quality_score(0), economy_score(0), environment_score(0), status(PlanStatus::AVALIABLE) {}
+      : plan_id(currPlanId), settlement(currSettlement), selectionPolicy(currSelectionPolicy), status(PlanStatus::AVALIABLE),
+        facilities(), underConstruction(), facilityOptions(currFacilityOptions),
+        life_quality_score(0), economy_score(0), environment_score(0) {}
 
-Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(other.facilityOptions), 
-            life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()), status(other.getStatus()){}
+Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
+        facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
+        life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {}
 // Rule of 5-ish
 
 // Move Constructor
-Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), facilityOptions(other.facilityOptions), 
-        life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()), status(other.getStatus()) {
+Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
+        facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
+        life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {
      other.selectionPolicy = nullptr;
      other.facilities.clear();
      other.underConstruction.clear();
@@ -84,7 +86,7 @@ void Plan:: step() {
         if(!hasLeftCapacity())
             setStatus(PlanStatus::BUSY);
     }
-    for(int i = 0; i < u.size(); i++) {
+    for(size_t i = 0; i < u.size(); i++) {
         if((*u[i]).getStatus() == FacilityStatus::OPERATIONAL) {
             addFacility(u[i]);
         }
@@ -142,9 +144,16 @@ const int Plan::getEnvironmentScore() const {
 }
 
 int getCapacityByType (SettlementType type) {
-    if (type == SettlementType::VILLAGE) return 1;
-    if (type == SettlementType::CITY) return 2;
-    if (type == SettlementType::METROPOLIS) return 3;
+    if (type == SettlementType::VILLAGE) {
+        return 1;
+    }
+    if (type == SettlementType::CITY) {
+        return 2;
+    }
+    if (type == SettlementType::METROPOLIS) {
+        return 3;
+    }
+    return 0;
 }
 
 bool Plan::hasLeftCapacity() {

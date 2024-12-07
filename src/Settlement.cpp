@@ -1,6 +1,5 @@
 #include <iostream>
 #include <algorithm>
-#pragma once
 #include <string>
 #include <vector>
 #include "Settlement.h"

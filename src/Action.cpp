@@ -1,4 +1,3 @@
-#pragma once
 #include <string>
 #include <vector>
 #include <iostream>
@@ -33,9 +32,8 @@ const string& BaseAction:: getErrorMsg() const {
     return errorMsg;
 }
 
-const string& BaseAction:: actionStatusToString() const {
-    if(getStatus() == ActionStatus:: COMPLETED) {
-        cout << "inside if" << endl;
+const string BaseAction:: actionStatusToString() const {
+    if (getStatus() == ActionStatus:: COMPLETED) {
         return "COMPLETED";
     }
     return "ERROR";
@@ -282,7 +280,7 @@ Close* Close:: clone() const {
 }
 
 const string Close:: toString() const {
-    "close" + actionStatusToString();
+    return "close" + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

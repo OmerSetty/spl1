@@ -1,4 +1,3 @@
-#pragma once
 #include <string>
 #include <vector>
 #include <iostream>
@@ -19,7 +18,8 @@ class SelectionPolicy;
 class Auxiliary;
 class Settlement;
 
-Simulation::Simulation(const string &configFilePath) : isRunning(false), planCounter(0) {
+Simulation::Simulation(const string &configFilePath) : isRunning(false), planCounter(0), actionsLog(), plans(),
+        settlements(), facilitiesOptions() {
     std::ifstream file(configFilePath);
     string currentLine;
     while (std::getline(file, currentLine)) {
@@ -29,7 +29,8 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
 }
 
 // should we initialize a vector of non-pointers like that? (e.g: plans, facilitiesOptons)
-Simulation::Simulation(const Simulation& other) : isRunning(other.isRunning), planCounter(other.planCounter), plans(other.plans), facilitiesOptions(other.facilitiesOptions) {
+Simulation::Simulation(const Simulation& other) : isRunning(other.isRunning), planCounter(other.planCounter), actionsLog(), plans(other.plans),
+        settlements(), facilitiesOptions(other.facilitiesOptions) {
     for (BaseAction* action : other.actionsLog) {
         actionsLog.push_back(action);
     }
@@ -105,25 +106,27 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
     const string typeOfObject = parsedArgs[0];
     // NOT SURE - who should delete the values on the heap?
     if (typeOfObject == "settlement") {
-        addSettlement(new Settlement(parsedArgs[1], Auxiliary::getSettlementTypeStringAsSettlementType(parsedArgs[2])));
+        addSettlement(new Settlement(parsedArgs[1], Auxiliary::stringToSettlementType(parsedArgs[2])));
     } 
     else if (typeOfObject == "facility") {
-        addFacility(FacilityType(parsedArgs[1], Auxiliary::getFacilityCategoryStringAsFacilityCategory(parsedArgs[2]), stoi(parsedArgs[3]), 
+        addFacility(FacilityType(parsedArgs[1], Auxiliary::stringToFacilityCategory(parsedArgs[2]), stoi(parsedArgs[3]), 
                                                                     stoi(parsedArgs[4]), stoi(parsedArgs[5]), stoi(parsedArgs[6])));
     }
     else if (typeOfObject == "plan") {
         const string selectionPolicyType = parsedArgs[2];
-        if (selectionPolicyType == "nve") {
-            addPlan(getSettlement(parsedArgs[1]), new NaiveSelection());
-        }
-        if (selectionPolicyType == "bal") {
-            addPlan(getSettlement(parsedArgs[1]), new BalancedSelection(0, 0, 0));
-        }
-        if (selectionPolicyType == "eco") {
-            addPlan(getSettlement(parsedArgs[1]), new EconomySelection());
-        }
-        if (selectionPolicyType == "env") {
-            addPlan(getSettlement(parsedArgs[1]), new SustainabilitySelection());
+        if (isSettlementExists(parsedArgs[1])) {
+            if (selectionPolicyType == "nve") {
+                addPlan(getSettlement(parsedArgs[1]), new NaiveSelection());
+            }
+            if (selectionPolicyType == "bal") {
+                addPlan(getSettlement(parsedArgs[1]), new BalancedSelection(0, 0, 0));
+            }
+            if (selectionPolicyType == "eco") {
+                addPlan(getSettlement(parsedArgs[1]), new EconomySelection());
+            }
+            if (selectionPolicyType == "env") {
+                addPlan(getSettlement(parsedArgs[1]), new SustainabilitySelection());
+            }
         }
     }
 }
@@ -158,10 +161,10 @@ void Simulation:: open() {
             action = new AddPlan(ia[1], ia[2]);
         }
         else if(ia[0] == "settlement") {
-            action = new AddSettlement(ia[1], Auxiliary:: getSettlementTypeStringAsSettlementType(ia[2]));
+            action = new AddSettlement(ia[1], Auxiliary:: stringToSettlementType(ia[2]));
         }
         else if(ia[0] == "facility") {
-            action = new AddFacility(ia[1], Auxiliary:: getFacilityCategoryStringAsFacilityCategory(ia[2]), stoi(ia[3]), stoi(ia[4]), stoi(ia[5]), stoi(ia[6]));
+            action = new AddFacility(ia[1], Auxiliary:: stringToFacilityCategory(ia[2]), stoi(ia[3]), stoi(ia[4]), stoi(ia[5]), stoi(ia[6]));
         }
         else if(ia[0] == "planStatus") {
             cout << ia[1] << endl;
@@ -235,6 +238,10 @@ Settlement& Simulation:: getSettlement(const string &settlementName) {
             return *s;
     }
     cout << "Simulation.getSettlement(const string &settlementName) was called but there is no settlement with the given name!" << endl;
+    // This section of code will never happen, because getSettlement() is called only after isSettlementExists() returns true.
+    // So we return an arbitrary Settlement instance in order to return a value anyway
+    Settlement* s = new Settlement(settlementName, SettlementType::METROPOLIS);
+    return *s;
 }
 
 bool Simulation:: isPlanExists(const int planID) {
@@ -250,18 +257,16 @@ const vector<BaseAction*>& Simulation:: getActionsLog() const {
 }
 
 Plan& Simulation:: getPlan(const int planID) {
-    for (int i = 0; i < plans.size(); i++) {
+    for (size_t i = 0; i < plans.size(); i++) {
         if(plans[i].getPlanID() == planID) {
             return plans[i];
         }
     }
-    
-    // for(Plan plan : plans) {
-    //     if(plan.getPlanID() == planID) {
-    //         Plan* returnedPlan = new Plan(plan);
-    //         return *returnedPlan;
-    //     }
-    // }
+    // This section of code will never happen, because getPlan() is called only after isPlanExists() returns true.
+    // So we return an arbitrary Plan instance in order to return a value anyway
+    Settlement* s = new Settlement("", SettlementType::METROPOLIS);
+    Plan* p = new Plan(-1, *s, new NaiveSelection(), facilitiesOptions);
+    return *p;
 }
 
 const vector<Plan>& Simulation:: getPlans() const {
@@ -269,7 +274,7 @@ const vector<Plan>& Simulation:: getPlans() const {
 }
 
 void Simulation:: step() {
-    for (int i = 0; i < plans.size(); i++) {
+    for (size_t i = 0; i < plans.size(); i++) {
         plans[i].step();
     }
     // for(Plan p : plans) {

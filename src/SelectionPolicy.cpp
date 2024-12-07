@@ -1,6 +1,5 @@
 #include <iostream>
 #include <algorithm>
-#pragma once
 #include <string>
 #include <vector>
 #include <climits>
@@ -34,7 +33,7 @@ const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& f
 }
 
 const string NaiveSelection:: toString() const {
-    return "Naive Selction";
+    return "nve";
 }
 
 NaiveSelection* NaiveSelection::clone() const {
@@ -61,7 +60,7 @@ BalancedSelection::BalancedSelection(int currLifeQualityScore, int currEconomySc
 const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     int min = INT_MAX;
     int index = 0;
-    for (int i=0; i<facilitiesOptions.size(); i++) {
+    for (size_t i=0; i<facilitiesOptions.size(); i++) {
         int improvedLQScore = LifeQualityScore + facilitiesOptions[i].getLifeQualityScore();
         int improvedEcoScore = EconomyScore + facilitiesOptions[i].getEconomyScore();
         int improvedEnvScore = EnvironmentScore + facilitiesOptions[i].getEnvironmentScore();
@@ -79,7 +78,7 @@ BalancedSelection* BalancedSelection:: clone() const {
 }
 
 const string BalancedSelection:: toString() const {
-    return "Balanced Selection";
+    return "bal";
 }
 
 // EconomySelection implementations
@@ -95,7 +94,7 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
 }
 
 const string EconomySelection::toString() const {
-    return "Economy Selection";
+    return "eco";
 }
 
 EconomySelection* EconomySelection::clone() const {
@@ -118,7 +117,7 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
 }
 
 const string SustainabilitySelection::toString() const {
-    return "Sustainability Selection";
+    return "env";
 }
 
 SustainabilitySelection* SustainabilitySelection::clone() const {
