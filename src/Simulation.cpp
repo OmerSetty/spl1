@@ -151,16 +151,24 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
         const string selectionPolicyType = parsedArgs[2];
         if (isSettlementExists(parsedArgs[1])) {
             if (selectionPolicyType == "nve") {
-                addPlan(getSettlement(parsedArgs[1]), new NaiveSelection());
+                NaiveSelection* naiv = new NaiveSelection();
+                addPlan(getSettlement(parsedArgs[1]), naiv);
+                delete naiv;
             }
             if (selectionPolicyType == "bal") {
-                addPlan(getSettlement(parsedArgs[1]), new BalancedSelection(0, 0, 0));
+                NaiveSelection* bala = new NaiveSelection();
+                addPlan(getSettlement(parsedArgs[1]), bala);
+                delete bala;
             }
             if (selectionPolicyType == "eco") {
-                addPlan(getSettlement(parsedArgs[1]), new EconomySelection());
+                EconomySelection* econo = new EconomySelection();
+                addPlan(getSettlement(parsedArgs[1]), econo);
+                delete econo;
             }
             if (selectionPolicyType == "env") {
-                addPlan(getSettlement(parsedArgs[1]), new SustainabilitySelection());
+                SustainabilitySelection* sus = new SustainabilitySelection();
+                addPlan(getSettlement(parsedArgs[1]), sus);
+                delete sus;
             }
         }
     }
@@ -174,7 +182,7 @@ Simulation:: ~Simulation() {
         for (BaseAction* action : actionsLog) {
             delete action;
         }
-        actionsLog.clear();
+        // actionsLog.clear();
     }
     // for (size_t i = 0; i < plans.size(); i++) {
     //     Plan& p = plans[i];
@@ -183,7 +191,7 @@ Simulation:: ~Simulation() {
     for (Settlement* settlement : settlements) {
         delete settlement;
     }
-    settlements.clear();
+    // settlements.clear();
 }
 
 void Simulation:: open() {
@@ -230,6 +238,8 @@ void Simulation:: open() {
         action->act(*this);
         if(!isPrintActionsLog)
             actionsLog.push_back(action);
+        else
+            delete action;
     }
 }
 
@@ -240,7 +250,7 @@ void Simulation::setIsRunning(bool isRunningStatus) {
 void Simulation:: start() {
     cout << "The simulation has started" << endl;
     isRunning = true;
-    open();
+    Simulation:: open();
 }
 
 void Simulation:: addPlan(const Settlement &settlement, SelectionPolicy* selectionPolicy) {
@@ -255,6 +265,7 @@ bool Simulation:: addSettlement(Settlement* settlement) {
         settlements.push_back(settlement);
         return true;
     }
+    delete settlement;
     return false;
 }
 
@@ -286,8 +297,8 @@ Settlement& Simulation:: getSettlement(const string &settlementName) {
 }
 
 bool Simulation:: isPlanExists(const int planID) {
-    for(Plan p : plans) {
-        if(p.getPlanID() == planID)
+    for (size_t i = 0; i < plans.size(); i++) {
+        if(plans[i].getPlanID() == planID)
             return true;
     }
     return false;
