@@ -17,7 +17,8 @@ using namespace std;
 Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPolicy* currSelectionPolicy, const vector<FacilityType> &currFacilityOptions)
       : plan_id(currPlanId), settlement(currSettlement), selectionPolicy(currSelectionPolicy), status(PlanStatus::AVALIABLE),
         facilities(), underConstruction(), facilityOptions(currFacilityOptions),
-        life_quality_score(0), economy_score(0), environment_score(0) {}
+        life_quality_score(0), economy_score(0), environment_score(0) {
+        }
 
 Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
         facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
@@ -29,18 +30,40 @@ Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlem
                 underConstruction.push_back(new Facility(*other.underConstruction[i]));
             }
         }
+
+// replacement for the copy constructor - CLONES the other plan's settlement, indtead of creating a reference to it.
+// Plan::Plan(const Plan& other, const Settlement& otherSettlementClone) : plan_id(other.plan_id), settlement(otherSettlementClone), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
+//         facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
+//         life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {
+//             for (size_t i = 0; i < other.facilities.size(); i++) {
+//                 facilities.push_back(new Facility(*other.facilities[i]));
+//             }
+//             for (size_t i = 0; i < other.underConstruction.size(); i++) {
+//                 underConstruction.push_back(new Facility(*other.underConstruction[i]));
+//             }
+//         }
+
+// option 2
+Plan::Plan(const Plan& other, const Settlement& otherSettlementClone) :
+Plan(other.plan_id, otherSettlementClone, other.selectionPolicy, other.facilityOptions) {
+    status = other.status;
+    life_quality_score = other.life_quality_score;
+    economy_score = other.economy_score;
+    environment_score = other.environment_score;
+    for (size_t i = 0; i < other.facilities.size(); i++) {
+        facilities.push_back(new Facility(*other.facilities[i]));
+    }
+    for (size_t i = 0; i < other.underConstruction.size(); i++) {
+        underConstruction.push_back(new Facility(*other.underConstruction[i]));
+    }
+}
+
 // Rule of 5-ish
 
 // Move Constructor
-Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
+Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy), status(other.getStatus()),
         facilities(other.facilities), underConstruction(other.underConstruction), facilityOptions(other.facilityOptions), 
         life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {
-    // for (size_t i = 0; i < other.facilities.size(); i++) {
-    //     facilities.push_back(other.facilities[i]);
-    // }
-    // for (size_t i = 0; i < other.underConstruction.size(); i++) {
-    //     underConstruction.push_back(other.underConstruction[i]);
-    // }
     other.selectionPolicy = nullptr;
     other.facilities.clear();
     other.underConstruction.clear();
@@ -49,7 +72,8 @@ Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement)
 
 // Distructor
 Plan:: ~Plan() {
-    delete selectionPolicy;
+    if (selectionPolicy != nullptr)
+        delete selectionPolicy;
     for(Facility* f : facilities) {
         delete f;
     }
@@ -65,7 +89,7 @@ void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
     if (getSelectionPolicy().toString() !=  (*selectionPolicy).toString()) {
         delete (*this).selectionPolicy;
         (*this).selectionPolicy = selectionPolicy;
-        selectionPolicy = nullptr;
+        // selectionPolicy = nullptr;
     }
 }
 

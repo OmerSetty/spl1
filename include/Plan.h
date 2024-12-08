@@ -14,6 +14,7 @@ class Plan {
     public:
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
         Plan(const Plan& other);
+        Plan(const Plan& other, const Settlement& otherSettlementClone);
         
         // Rule of 3
         Plan(Plan&& other);

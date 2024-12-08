@@ -29,17 +29,19 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
 }
 
 // should we initialize a vector of non-pointers like that? (e.g: plans, facilitiesOptons)
-Simulation::Simulation(const Simulation& other) : isRunning(other.getIsRunning()), planCounter(other.getPlanCounter()), actionsLog(), plans(),
-        settlements(), facilitiesOptions(other.getFacilityOptions()) {
+Simulation::Simulation(const Simulation& other) 
+: isRunning(other.getIsRunning()), planCounter(other.getPlanCounter()), actionsLog(), plans(),
+settlements(), facilitiesOptions(other.getFacilityOptions()) {
     for (BaseAction* action : other.getActionsLog()) {
         actionsLog.push_back((*action).clone());
     }
     for (Settlement* settlement : other.getSettlements()) {
         // settlements.push_back(settlement);
-        settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
+        settlements.push_back(new Settlement(*settlement));
     }
     for (size_t i = 0; i < other.plans.size(); i++) {
-        plans.push_back(Plan(other.plans[i]));
+        Plan p1 = Plan(other.plans[i], getSettlement(other.plans[i].getSettlment().getName()));
+        plans.push_back(p1);
     }
 }
 
@@ -58,39 +60,28 @@ Simulation& Simulation:: operator=(const Simulation &other) {
         for (BaseAction* action: actionsLog) {
             delete action;
         }
+        actionsLog.clear();
         for (BaseAction* action: other.getActionsLog()) {
             actionsLog.push_back((*action).clone());
         }
-        // plans = other.plans;
-        // for (size_t i = 0; i < plans.size(); i++) {
-        //     Plan& p = plans[i];
-        //     delete &p;
-        //     p.deleteSelectionPolicy();
-
-        //     for (size_t j = 0; j < p.getFacilities().size(); j++) {
-        //         delete p.getFacilities()[j];
-        //     }
-        //     p.clearFacilities();
-
-        //     for (size_t j = 0; j < p.getUnderConstructionFacilities().size(); j++) {
-        //         delete p.getUnderConstructionFacilities()[j];
-        //     }
-        //     p.clearUnderConstruction();
-        // }
-        plans.clear();
-        
-        for (size_t i = 0; i < other.plans.size(); i++) {
-            plans.push_back(Plan(other.plans[i]));
-        }
-        
+        // make sure
         for (Settlement* settlement: settlements) {
             delete settlement;
         }
         settlements.clear();
-
         for (Settlement* settlement: other.getSettlements()) {
-            settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
+            cout << settlement->getName() << endl;
+            settlements.push_back(new Settlement(*settlement));
+            // settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
         }
+        plans.clear();
+        
+        // need to replace tohe plan copy constructor
+        for (size_t i = 0; i < other.plans.size(); i++) {
+            Plan p1 = Plan(other.plans[i], getSettlement(other.plans[i].getSettlment().getName()));
+            plans.push_back(p1);
+        }
+        
         facilitiesOptions.clear();
         for (size_t i = 0; i < other.getFacilityOptions().size(); i++) {
             // facilitiesOptions.push_back(Facility(other.getFacilityOptions()[i]));
@@ -151,24 +142,28 @@ void Simulation::addConfigObject(vector<string> parsedArgs) {
         const string selectionPolicyType = parsedArgs[2];
         if (isSettlementExists(parsedArgs[1])) {
             if (selectionPolicyType == "nve") {
-                NaiveSelection* naiv = new NaiveSelection();
-                addPlan(getSettlement(parsedArgs[1]), naiv);
-                delete naiv;
+                addPlan(getSettlement(parsedArgs[1]), new NaiveSelection());
+                // NaiveSelection* naiv = new NaiveSelection();
+                // addPlan(getSettlement(parsedArgs[1]), naiv);
+                // delete naiv;
             }
             if (selectionPolicyType == "bal") {
-                NaiveSelection* bala = new NaiveSelection();
-                addPlan(getSettlement(parsedArgs[1]), bala);
-                delete bala;
+                addPlan(getSettlement(parsedArgs[1]), new BalancedSelection(0, 0, 0));
+                // NaiveSelection* bala = new NaiveSelection();
+                // addPlan(getSettlement(parsedArgs[1]), bala);
+                // delete bala;
             }
             if (selectionPolicyType == "eco") {
-                EconomySelection* econo = new EconomySelection();
-                addPlan(getSettlement(parsedArgs[1]), econo);
-                delete econo;
+                addPlan(getSettlement(parsedArgs[1]), new EconomySelection());
+                // EconomySelection* econo = new EconomySelection();
+                // addPlan(getSettlement(parsedArgs[1]), econo);
+                // delete econo;
             }
             if (selectionPolicyType == "env") {
-                SustainabilitySelection* sus = new SustainabilitySelection();
-                addPlan(getSettlement(parsedArgs[1]), sus);
-                delete sus;
+                addPlan(getSettlement(parsedArgs[1]), new SustainabilitySelection());
+                // SustainabilitySelection* sus = new SustainabilitySelection();
+                // addPlan(getSettlement(parsedArgs[1]), sus);
+                // delete sus;
             }
         }
     }
@@ -254,7 +249,8 @@ void Simulation:: start() {
 }
 
 void Simulation:: addPlan(const Settlement &settlement, SelectionPolicy* selectionPolicy) {
-    plans.push_back(Plan(planCounter, settlement, selectionPolicy, facilitiesOptions)); // We must save the plans on the stack??
+    Plan p1 = Plan(planCounter, settlement, selectionPolicy, facilitiesOptions);
+    plans.push_back(p1); // We must save the plans on the stack??
     planCounter++;
 }
 void Simulation:: addAction(BaseAction *action) {

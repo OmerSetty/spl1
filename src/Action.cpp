@@ -25,7 +25,7 @@ void BaseAction:: complete() {
 void BaseAction:: error(string errorMsg) {
     status = ActionStatus:: ERROR;
     (*this).errorMsg = errorMsg;
-    cout << "ERROR " + errorMsg << endl;
+    cout << "Error: " + errorMsg << endl;
 }
 
 const string& BaseAction:: getErrorMsg() const {
@@ -249,8 +249,8 @@ const string ChangePlanPolicy:: toString() const {
 PrintActionsLog:: PrintActionsLog(): BaseAction() {}
 
 void PrintActionsLog:: act(Simulation &simulation) {
-    for(BaseAction* action : simulation.getActionsLog()) {
-        cout << action->toString() << endl;
+    for(BaseAction* actionToString : simulation.getActionsLog()) {
+        cout << actionToString->toString() << endl;
     }
 }
 
@@ -259,7 +259,7 @@ PrintActionsLog* PrintActionsLog:: clone() const {
 }
 
 const string PrintActionsLog:: toString() const {
-    return "log" + actionStatusToString();
+    return "log " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

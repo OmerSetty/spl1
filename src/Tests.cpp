@@ -48,3 +48,21 @@
 // (*p1).step();
 // cout << "step 6:" << endl;
 // (*p1).step();
+
+
+// plans = other.plans;
+        // for (size_t i = 0; i < plans.size(); i++) {
+        //     Plan& p = plans[i];
+        //     delete &p;
+        //     p.deleteSelectionPolicy();
+
+        //     for (size_t j = 0; j < p.getFacilities().size(); j++) {
+        //         delete p.getFacilities()[j];
+        //     }
+        //     p.clearFacilities();
+
+        //     for (size_t j = 0; j < p.getUnderConstructionFacilities().size(); j++) {
+        //         delete p.getUnderConstructionFacilities()[j];
+        //     }
+        //     p.clearUnderConstruction();
+        // }
