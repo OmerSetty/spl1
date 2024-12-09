@@ -14,12 +14,13 @@ class SelectionPolicy;
 class Simulation {
     public:
         Simulation(const string &configFilePath);
-        // copy constructor (for backup)
+        // RULE OF 5
         Simulation(const Simulation& other);
         Simulation(Simulation&& other);
         Simulation& operator=(const Simulation& other);
         Simulation& operator=(Simulation&& other);
         ~Simulation();
+        
         void start();
         void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
         void addAction(BaseAction *action);

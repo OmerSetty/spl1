@@ -9,13 +9,11 @@ using std::vector;
 using namespace std;
 
 // FacilityType
-// Constructors
-// Parameterized
+// Constructor
 FacilityType:: FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score):
     name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score){}
 
 
-// Methods
 const string& FacilityType:: getName() const {
     return name;
 }
@@ -40,6 +38,8 @@ FacilityCategory FacilityType:: getCategory() const {
     return category;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Facility
 // Constructors
 // Parameterized
@@ -63,7 +63,7 @@ void Facility::setStatus(FacilityStatus newStatus) {
 const FacilityStatus& Facility::getStatus() const {
     return status;
 }
-// NOT SURE - how to treat the enum
+
 FacilityStatus Facility::step() {
     if (getStatus() == FacilityStatus:: UNDER_CONSTRUCTIONS) {
         timeLeft--;
@@ -84,8 +84,6 @@ string getStatusAsString (FacilityStatus status) {
     return "";
 }
 
-// NOT SURE - how to implement methods like
-// that (that has no details in the guide) 
 const string Facility::toString() const {
     return "name: " + getName() + " status: " + getStatusAsString(getStatus()) + " timeLeft: " + to_string(getTimeLeft());
 }

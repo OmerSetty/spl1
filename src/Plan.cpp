@@ -14,12 +14,14 @@ using std::string;
 using std::vector;
 using namespace std;
 
+// Constructor
 Plan::Plan(const int currPlanId, const Settlement& currSettlement, SelectionPolicy* currSelectionPolicy, const vector<FacilityType> &currFacilityOptions)
       : plan_id(currPlanId), settlement(currSettlement), selectionPolicy(currSelectionPolicy), status(PlanStatus::AVALIABLE),
         facilities(), underConstruction(), facilityOptions(currFacilityOptions),
         life_quality_score(0), economy_score(0), environment_score(0) {
         }
-
+// RULE OF 5-ish
+//Copy Constructor
 Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
         facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
         life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {
@@ -31,7 +33,7 @@ Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlem
             }
         }
 
-// option 2
+// Another Copy Constructor - CLONES the other plan's settlements
 Plan::Plan(const Plan& other, const Settlement& otherSettlementClone) :
 Plan(other.plan_id, otherSettlementClone, other.selectionPolicy->clone(), other.facilityOptions) {
     status = other.status;
@@ -46,8 +48,6 @@ Plan(other.plan_id, otherSettlementClone, other.selectionPolicy->clone(), other.
     }
 }
 
-// Rule of 5-ish
-
 // Move Constructor
 Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement), selectionPolicy(other.selectionPolicy), status(other.getStatus()),
         facilities(other.facilities), underConstruction(other.underConstruction), facilityOptions(other.facilityOptions), 
@@ -55,10 +55,9 @@ Plan:: Plan(Plan&& other) : plan_id(other.plan_id), settlement(other.settlement)
     other.selectionPolicy = nullptr;
     other.facilities.clear();
     other.underConstruction.clear();
-    // other.facilitiesOptions.clear();
 }
 
-// Distructor
+// Destructor
 Plan:: ~Plan() {
     if (selectionPolicy != nullptr)
         delete selectionPolicy;
@@ -72,12 +71,11 @@ Plan:: ~Plan() {
     underConstruction.clear();
 }
 
-// Make sure theres no memory leak and that the method works
+
 void Plan:: setSelectionPolicy(SelectionPolicy *selectionPolicy) {
     if (getSelectionPolicy().toString() !=  (*selectionPolicy).toString()) {
         delete (*this).selectionPolicy;
         (*this).selectionPolicy = selectionPolicy;
-        // selectionPolicy = nullptr;
     }
 }
 
@@ -99,10 +97,11 @@ void Plan:: clearUnderConstruction() {
 
 // Removes the facility from the underConstruction vector
 // Adds it to the existing facilities vector
+// Changes planStatus to AVAILABLE
 void Plan:: addFacility(Facility* facility) {
     vector<Facility*>& u = underConstruction;
     u.erase(find(u.begin(), u.end(), facility));
-    facilities.push_back(facility); // dont forget to deeply delete everything after the end of the use.
+    facilities.push_back(facility);
     setStatus(PlanStatus:: AVALIABLE);
     life_quality_score += facility->getLifeQualityScore();
     economy_score += facility->getEconomyScore();
@@ -111,12 +110,13 @@ void Plan:: addFacility(Facility* facility) {
 
 void Plan:: step() {
     vector<Facility*>& u = underConstruction;
+    // promoting the construction of every facility under construction
     for (Facility* uc : u) {
         (*uc).step();
     }
+    // Adding new facilitues to construct if possible
     while(status == PlanStatus::AVALIABLE) {
         const FacilityType& nextFacilityType = (*selectionPolicy).selectFacility(facilityOptions);
-        // stack or heap?
         Facility* nextFacility = new Facility(nextFacilityType, settlement.getName());
         u.push_back(nextFacility);
         (*nextFacility).step();
@@ -124,6 +124,7 @@ void Plan:: step() {
         if(!hasLeftCapacity())
             setStatus(PlanStatus::BUSY);
     }
+    // Moving all the constructed facilities to the facilities list
     for(size_t i = 0; i < u.size(); i++) {
         if((*u[i]).getStatus() == FacilityStatus::OPERATIONAL) {
             addFacility(u[i]);

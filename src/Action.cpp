@@ -10,8 +10,8 @@ enum class FacilityCategory;
 using namespace std;
 extern Simulation* backup;
 
-// Base Action Methods
-// Constructor
+// Base Action
+
 BaseAction:: BaseAction(): errorMsg("Error Message Initial Value"), status(ActionStatus:: ERROR) {}
 
 ActionStatus BaseAction:: getStatus() const {
@@ -41,7 +41,7 @@ const string BaseAction:: actionStatusToString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// SimulateStep methods
+// SimulateStep
 
 SimulateStep:: SimulateStep(const int numOfSteps): BaseAction(), numOfSteps(numOfSteps) {}
 
@@ -57,18 +57,17 @@ const string SimulateStep:: SimulateStep:: toString() const {
 }
 
 SimulateStep* SimulateStep:: clone() const {
-    return new SimulateStep(*this); // Make sure this is a good idea
+    return new SimulateStep(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// AddPlan methods
+// AddPlan
 
 AddPlan:: AddPlan(const string &settlementName, const string &selectionPolicy):
 BaseAction(), settlementName(settlementName), selectionPolicy(selectionPolicy) {}
 
 void AddPlan:: act(Simulation &simulation) {
-    // look for the settlement with the same name in 
     if(!simulation.isSettlementExists(settlementName)) {
         error("Cannot create this plan");
     }
@@ -106,7 +105,7 @@ AddPlan* AddPlan:: clone() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// AddSettlement methods
+// AddSettlement
 
 AddSettlement:: AddSettlement(const string &settlementName,SettlementType settlementType) :
 BaseAction(), settlementName(settlementName), settlementType(settlementType) {}
@@ -132,7 +131,7 @@ AddSettlement* AddSettlement:: clone() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// AddFacility methods
+// AddFacility
 
 AddFacility:: AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore):
 BaseAction(), facilityName(facilityName), facilityCategory(facilityCategory), price(price), lifeQualityScore(lifeQualityScore), economyScore(economyScore), environmentScore(environmentScore) {}
@@ -159,7 +158,7 @@ AddFacility* AddFacility:: clone() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// PrintPlanStatus methods
+// PrintPlanStatus
 
 PrintPlanStatus:: PrintPlanStatus(int planId) : BaseAction(), planId(planId) {}
 
@@ -179,11 +178,9 @@ void PrintPlanStatus:: act(Simulation &simulation) {
         "\nEnvrionmentScore: " + to_string(plan.getEnvironmentScore());
     for (const Facility* facility: plan.getFacilities()) {
         planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONAL");
-        // planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONAL";
     }
     for (const Facility* facility: plan.getUnderConstructionFacilities()) {
         planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION");
-        // planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION";
     }
     cout << planStatus << endl;
     complete();
@@ -198,7 +195,7 @@ const string PrintPlanStatus:: toString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// ChangePlanPolicy methods
+// ChangePlanPolicy
 
 ChangePlanPolicy:: ChangePlanPolicy(const int planId, const string &newPolicy) : BaseAction(), planId(planId), newPolicy(newPolicy) {}
 
@@ -244,7 +241,7 @@ const string ChangePlanPolicy:: toString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// PrintActionsLog methods
+// PrintActionsLog
 
 PrintActionsLog:: PrintActionsLog(): BaseAction() {}
 
@@ -264,7 +261,7 @@ const string PrintActionsLog:: toString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Close methods
+// Close
 
 Close:: Close() : BaseAction() {}
 
@@ -283,7 +280,7 @@ const string Close:: toString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// BackupSimulation methods
+// BackupSimulation
 
 BackupSimulation:: BackupSimulation() : BaseAction() {}
 
@@ -307,7 +304,7 @@ const string BackupSimulation:: toString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// RestoreSimulation methods
+// RestoreSimulation
 
 RestoreSimulation:: RestoreSimulation(): BaseAction() {}
 

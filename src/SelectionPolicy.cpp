@@ -13,7 +13,7 @@ using std::vector;
 using namespace std;
 
 // Increase Index - Increases the index if possible,
-// or resets it to 0 if we gor to the end of the vector
+// or resets it to 0 if we got to the end of the vector
 int SelectionPolicy:: increaseIndex(int currIndex, int facilitiesOptionsSize) {
     currIndex += 1;
     if(currIndex >= facilitiesOptionsSize)
@@ -41,15 +41,6 @@ NaiveSelection* NaiveSelection::clone() const {
 }
 
 
-int SelectionPolicy:: distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore) {
-    int max = lifeQualityScore;
-    if(economyScore > max) max = economyScore;
-    if(environmentScore > max) max = environmentScore;
-    int min = lifeQualityScore;
-    if(economyScore < min) min = economyScore;
-    if(environmentScore < min) min = environmentScore;
-    return max-min;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -60,12 +51,13 @@ BalancedSelection::BalancedSelection(int currLifeQualityScore, int currEconomySc
 const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     int min = INT_MAX;
     int index = 0;
+    // Finds the facilityType which will keep the difference between settlement's scores minimal
     for (size_t i=0; i<facilitiesOptions.size(); i++) {
         int improvedLQScore = LifeQualityScore + facilitiesOptions[i].getLifeQualityScore();
         int improvedEcoScore = EconomyScore + facilitiesOptions[i].getEconomyScore();
         int improvedEnvScore = EnvironmentScore + facilitiesOptions[i].getEnvironmentScore();
         int distance = distanceCalculator(improvedLQScore, improvedEcoScore, improvedEnvScore);
-        if(distance < min){
+        if(distance < min) {
             min = distance;
             index = i;
         }
@@ -76,6 +68,17 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
     return facilitiesOptions[index];
 }
 
+// Calculate the maxumum difference between scores of the settlement
+int SelectionPolicy:: distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore) {
+    int max = lifeQualityScore;
+    if(economyScore > max) max = economyScore;
+    if(environmentScore > max) max = environmentScore;
+    int min = lifeQualityScore;
+    if(economyScore < min) min = economyScore;
+    if(environmentScore < min) min = environmentScore;
+    return max-min;
+}
+
 BalancedSelection* BalancedSelection:: clone() const {
     return new BalancedSelection(*this);
 }
@@ -83,6 +86,9 @@ BalancedSelection* BalancedSelection:: clone() const {
 const string BalancedSelection:: toString() const {
     return "bal";
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // EconomySelection implementations
 EconomySelection::EconomySelection() : lastSelectedIndex(0) {}

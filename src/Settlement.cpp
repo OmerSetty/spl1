@@ -20,8 +20,6 @@ SettlementType Settlement::getType() const {
     return type;
 }
 
-// NOT SURE - how to implement methods like
-// that (that has no details in the guide) 
 const string Settlement::toString() const {
     return "name: " + getName();
 }
