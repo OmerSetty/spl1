@@ -14,12 +14,13 @@ class SelectionPolicy;
 class Simulation {
     public:
         Simulation(const string &configFilePath);
-        // copy constructor (for backup)
+        // RULE OF 5
         Simulation(const Simulation& other);
         Simulation(Simulation&& other);
         Simulation& operator=(const Simulation& other);
         Simulation& operator=(Simulation&& other);
         ~Simulation();
+        
         void start();
         void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
         void addAction(BaseAction *action);
@@ -30,6 +31,10 @@ class Simulation {
         bool isPlanExists(const int planID);
         Plan &getPlan(const int planID);
         const vector<Plan>& getPlans() const;
+        const vector<Settlement*>& getSettlements() const;
+        const vector<FacilityType>& getFacilityOptions() const;
+        const bool getIsRunning() const;
+        const int getPlanCounter() const;
         void step();
         void addConfigObject(vector<string> parsedArgs);
         void close();

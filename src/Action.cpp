@@ -1,4 +1,3 @@
-#pragma once
 #include <string>
 #include <vector>
 #include <iostream>
@@ -11,8 +10,8 @@ enum class FacilityCategory;
 using namespace std;
 extern Simulation* backup;
 
-// Base Action Methods
-// Constructor
+// Base Action
+
 BaseAction:: BaseAction(): errorMsg("Error Message Initial Value"), status(ActionStatus:: ERROR) {}
 
 ActionStatus BaseAction:: getStatus() const {
@@ -26,16 +25,15 @@ void BaseAction:: complete() {
 void BaseAction:: error(string errorMsg) {
     status = ActionStatus:: ERROR;
     (*this).errorMsg = errorMsg;
-    cout << "ERROR" + errorMsg;
+    cout << "Error: " + errorMsg << endl;
 }
 
 const string& BaseAction:: getErrorMsg() const {
     return errorMsg;
 }
 
-const string& BaseAction:: actionStatusToString() const {
-    if(getStatus() == ActionStatus:: COMPLETED) {
-        cout << "inside if" << endl;
+const string BaseAction:: actionStatusToString() const {
+    if (getStatus() == ActionStatus:: COMPLETED) {
         return "COMPLETED";
     }
     return "ERROR";
@@ -43,7 +41,7 @@ const string& BaseAction:: actionStatusToString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// SimulateStep methods
+// SimulateStep
 
 SimulateStep:: SimulateStep(const int numOfSteps): BaseAction(), numOfSteps(numOfSteps) {}
 
@@ -55,22 +53,21 @@ void SimulateStep:: act(Simulation &simulation) {
 }
 
 const string SimulateStep:: SimulateStep:: toString() const {
-    return "step" + to_string(numOfSteps) + " " + actionStatusToString();
+    return "step " + to_string(numOfSteps) + " " + actionStatusToString();
 }
 
 SimulateStep* SimulateStep:: clone() const {
-    return new SimulateStep(*this); // Make sure this is a good idea
+    return new SimulateStep(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// AddPlan methods
+// AddPlan
 
 AddPlan:: AddPlan(const string &settlementName, const string &selectionPolicy):
 BaseAction(), settlementName(settlementName), selectionPolicy(selectionPolicy) {}
 
 void AddPlan:: act(Simulation &simulation) {
-    // look for the settlement with the same name in 
     if(!simulation.isSettlementExists(settlementName)) {
         error("Cannot create this plan");
     }
@@ -108,7 +105,7 @@ AddPlan* AddPlan:: clone() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// AddSettlement methods
+// AddSettlement
 
 AddSettlement:: AddSettlement(const string &settlementName,SettlementType settlementType) :
 BaseAction(), settlementName(settlementName), settlementType(settlementType) {}
@@ -134,7 +131,7 @@ AddSettlement* AddSettlement:: clone() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// AddFacility methods
+// AddFacility
 
 AddFacility:: AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore):
 BaseAction(), facilityName(facilityName), facilityCategory(facilityCategory), price(price), lifeQualityScore(lifeQualityScore), economyScore(economyScore), environmentScore(environmentScore) {}
@@ -161,35 +158,16 @@ AddFacility* AddFacility:: clone() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// PrintPlanStatus methods
+// PrintPlanStatus
 
-PrintPlanStatus:: PrintPlanStatus(int planId) : planId(planId) {}
+PrintPlanStatus:: PrintPlanStatus(int planId) : BaseAction(), planId(planId) {}
 
 void PrintPlanStatus:: act(Simulation &simulation) {
-    cout << "start of PrintPlanStatus act" << endl;
     if (!simulation.isPlanExists(planId)) {
-        cout << "PrintPlanStatus act 1" << endl;
         error("Plan doesn’t exist");
         return;
     }
-    cout << "PrintPlanStatus act 2" << endl;
     Plan& plan = simulation.getPlan(planId);
-    cout << "plan tostring: " + plan.toString() << endl;
-    cout << "PrintPlanStatus act 3" << endl;
-    cout << "PlanID: " + to_string(planId) << endl;
-    cout << "SettlementName: " + plan.getSettlment().getName() << endl;
-    cout << "PlanStatus: " + Auxiliary::getPlanStatusAsString(plan.getStatus()) << endl;
-    cout << "SelectionPolicy: " + plan.getSelectionPolicy().toString() << endl;
-    cout << "LifeQualityScore: " + to_string(plan.getlifeQualityScore()) << endl;
-    cout << "EconomyScore: " + to_string(plan.getEconomyScore()) << endl;
-    cout << "EnvrionmentScore: " + to_string(plan.getEnvironmentScore()) << endl;
-    // cout << "SettlementName: " << endl;
-    // cout << "PlanStatus: " << endl;
-    // cout << "SelectionPolicy: " << endl;
-    // cout << "LifeQualityScore: " << endl;
-    // cout << "EconomyScore: " << endl;
-    // cout << "EnvrionmentScore: " << endl;
-
     string planStatus = 
         "PlanID: " + to_string(planId) +
         "\nSettlementName: " + plan.getSettlment().getName() +
@@ -197,15 +175,14 @@ void PrintPlanStatus:: act(Simulation &simulation) {
         "\nSelectionPolicy: " + plan.getSelectionPolicy().toString()
         + "\nLifeQualityScore: " + to_string(plan.getlifeQualityScore()) +
         "\nEconomyScore: " + to_string(plan.getEconomyScore()) +
-        "EnvrionmentScore: " + to_string(plan.getEnvironmentScore());
-    cout << "PrintPlanStatus act 4" << endl;
+        "\nEnvrionmentScore: " + to_string(plan.getEnvironmentScore());
     for (const Facility* facility: plan.getFacilities()) {
-        planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONALS";
+        planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: OPERATIONAL");
     }
     for (const Facility* facility: plan.getUnderConstructionFacilities()) {
-        planStatus += "\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION";
+        planStatus.append("\nFacilityName: " + facility->getName() + "\nFacilityStatus: UNDER CONSTRUCTION");
     }
-    cout << "PrintPlanStatus act 5" << endl;
+    cout << planStatus << endl;
     complete();
 }
 PrintPlanStatus* PrintPlanStatus:: clone() const {
@@ -213,12 +190,12 @@ PrintPlanStatus* PrintPlanStatus:: clone() const {
 }
 
 const string PrintPlanStatus:: toString() const {
-    return "planStatus" + to_string(planId) + " " + actionStatusToString();
+    return "planStatus " + to_string(planId) + " " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// ChangePlanPolicy methods
+// ChangePlanPolicy
 
 ChangePlanPolicy:: ChangePlanPolicy(const int planId, const string &newPolicy) : BaseAction(), planId(planId), newPolicy(newPolicy), prevPolicy(""){}
 
@@ -264,13 +241,13 @@ const string ChangePlanPolicy:: toString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// PrintActionsLog methods
+// PrintActionsLog
 
 PrintActionsLog:: PrintActionsLog(): BaseAction() {}
 
 void PrintActionsLog:: act(Simulation &simulation) {
-    for(BaseAction* action : simulation.getActionsLog()) {
-        cout << action->toString() << endl;
+    for(BaseAction* actionToString : simulation.getActionsLog()) {
+        cout << actionToString->toString() << endl;
     }
 }
 
@@ -279,20 +256,18 @@ PrintActionsLog* PrintActionsLog:: clone() const {
 }
 
 const string PrintActionsLog:: toString() const {
-    return "log" + actionStatusToString();
+    return "log " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Close methods
+// Close
 
 Close:: Close() : BaseAction() {}
 
 void Close:: act(Simulation &simulation) {
-    simulation.setIsRunning(false);
-    for (Plan plan : simulation.getPlans()) {
-        cout << plan.toString() << endl;
-    }
+    simulation.close();
+    complete();
 }
 
 Close* Close:: clone() const {
@@ -300,14 +275,14 @@ Close* Close:: clone() const {
 }
 
 const string Close:: toString() const {
-    "close" + actionStatusToString();
+    return "close" + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// BackupSimulation methods
+// BackupSimulation
 
-BackupSimulation:: BackupSimulation() {}
+BackupSimulation:: BackupSimulation() : BaseAction() {}
 
 void BackupSimulation:: act(Simulation &simulation) {
     if (backup == nullptr) {
@@ -329,7 +304,7 @@ const string BackupSimulation:: toString() const {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// RestoreSimulation methods
+// RestoreSimulation
 
 RestoreSimulation:: RestoreSimulation(): BaseAction() {}
 

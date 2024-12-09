@@ -13,17 +13,14 @@ enum class PlanStatus {
 class Plan {
     public:
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
-        Plan(const Plan& other);
         
-        // Rule of 3
+        // RULE OF 5-ish
+        Plan(const Plan& other);
+        Plan(const Plan& other, const Settlement& otherSettlementClone);
         Plan(Plan&& other);
-        Plan& operator=(const Plan& other) = delete; // maybe should be void?
-        Plan& operator=(const Plan&& other) = delete; // maybe should be void?
-        ~Plan();    // Destructor
-
-        ////////////////////////////////////////////////////////////////////////////////////////
-
-        // Methods
+        Plan& operator=(const Plan& other) = delete;
+        Plan& operator=(const Plan&& other) = delete;
+        ~Plan();
 
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
@@ -32,6 +29,9 @@ class Plan {
         const Settlement& getSettlment() const;
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
         void setStatus(PlanStatus status);
+        void deleteSelectionPolicy();
+        void clearFacilities();
+        void clearUnderConstruction();
         void step();
         void printStatus();
         const vector<Facility*> &getFacilities() const;
@@ -39,14 +39,6 @@ class Plan {
         const vector<FacilityType>& getFacilityOptions() const;
         void addFacility(Facility* facility);
         const string toString() const;
-
-    // // Our new methods
-    //     // Copy Counstructor
-    //     Plan(Plan& other);
-    //     // Destructor
-    //     ~Plan();
-    //     // Assignment Opertaor
-    //     // Move Constructor
         const SelectionPolicy& getSelectionPolicy() const;
         bool hasLeftCapacity();
         const PlanStatus getStatus() const;

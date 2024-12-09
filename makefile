@@ -17,6 +17,8 @@ hello: clean bin/main.o
 	
 	./bin/main /workspaces/Skeleton/config_file.txt
 
+	# valgrind -s --leak-check=full --show-reachable=yes ./bin/main /workspaces/Skeleton/config_file.txt
+
 # Depends on the source and header files
 
 bin/main.o: src/main.cpp
@@ -42,4 +44,4 @@ bin/main.o: src/main.cpp
 
 clean:
 
-	rm -f bin/*
+	rm -f ./bin/*

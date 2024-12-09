@@ -1,6 +1,5 @@
 #include <iostream>
 #include <algorithm>
-#pragma once
 #include <string>
 #include <vector>
 #include <climits>
@@ -14,7 +13,7 @@ using std::vector;
 using namespace std;
 
 // Increase Index - Increases the index if possible,
-// or resets it to 0 if we gor to the end of the vector
+// or resets it to 0 if we got to the end of the vector
 int SelectionPolicy:: increaseIndex(int currIndex, int facilitiesOptionsSize) {
     currIndex += 1;
     if(currIndex >= facilitiesOptionsSize)
@@ -34,7 +33,7 @@ const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& f
 }
 
 const string NaiveSelection:: toString() const {
-    return "Naive Selction";
+    return "nve";
 }
 
 NaiveSelection* NaiveSelection::clone() const {
@@ -42,15 +41,6 @@ NaiveSelection* NaiveSelection::clone() const {
 }
 
 
-int SelectionPolicy:: distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore) {
-    int max = lifeQualityScore;
-    if(economyScore > max) max = economyScore;
-    if(environmentScore > max) max = environmentScore;
-    int min = lifeQualityScore;
-    if(economyScore < min) min = economyScore;
-    if(environmentScore < min) min = environmentScore;
-    return max-min;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -61,17 +51,32 @@ BalancedSelection::BalancedSelection(int currLifeQualityScore, int currEconomySc
 const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     int min = INT_MAX;
     int index = 0;
-    for (int i=0; i<facilitiesOptions.size(); i++) {
+    // Finds the facilityType which will keep the difference between settlement's scores minimal
+    for (size_t i=0; i<facilitiesOptions.size(); i++) {
         int improvedLQScore = LifeQualityScore + facilitiesOptions[i].getLifeQualityScore();
         int improvedEcoScore = EconomyScore + facilitiesOptions[i].getEconomyScore();
         int improvedEnvScore = EnvironmentScore + facilitiesOptions[i].getEnvironmentScore();
         int distance = distanceCalculator(improvedLQScore, improvedEcoScore, improvedEnvScore);
-        if(distance < min){
+        if(distance < min) {
             min = distance;
             index = i;
         }
     }
+    LifeQualityScore = facilitiesOptions[index].getLifeQualityScore();
+    EconomyScore = facilitiesOptions[index].getEconomyScore();
+    EnvironmentScore = facilitiesOptions[index].getEnvironmentScore();
     return facilitiesOptions[index];
+}
+
+// Calculate the maxumum difference between scores of the settlement
+int SelectionPolicy:: distanceCalculator (int lifeQualityScore, int economyScore, int environmentScore) {
+    int max = lifeQualityScore;
+    if(economyScore > max) max = economyScore;
+    if(environmentScore > max) max = environmentScore;
+    int min = lifeQualityScore;
+    if(economyScore < min) min = economyScore;
+    if(environmentScore < min) min = environmentScore;
+    return max-min;
 }
 
 BalancedSelection* BalancedSelection:: clone() const {
@@ -79,8 +84,11 @@ BalancedSelection* BalancedSelection:: clone() const {
 }
 
 const string BalancedSelection:: toString() const {
-    return "Balanced Selection";
+    return "bal";
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 // EconomySelection implementations
 EconomySelection::EconomySelection() : lastSelectedIndex(0) {}
@@ -89,13 +97,13 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
     while (facilitiesOptions[lastSelectedIndex].getCategory() != FacilityCategory::ECONOMY) {
         lastSelectedIndex = increaseIndex(lastSelectedIndex, facilitiesOptions.size());
     }
-    int currentIndex = lastSelectedIndex; 
-    increaseIndex(currentIndex, facilitiesOptions.size());
+    int currentIndex = lastSelectedIndex;
+    lastSelectedIndex = increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
 
 const string EconomySelection::toString() const {
-    return "Economy Selection";
+    return "eco";
 }
 
 EconomySelection* EconomySelection::clone() const {
@@ -113,12 +121,12 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
         lastSelectedIndex = increaseIndex(lastSelectedIndex, facilitiesOptions.size());
     }
     int currentIndex = lastSelectedIndex; 
-    increaseIndex(currentIndex, facilitiesOptions.size());
+    lastSelectedIndex = increaseIndex(currentIndex, facilitiesOptions.size());
     return facilitiesOptions[currentIndex];
 }
 
 const string SustainabilitySelection::toString() const {
-    return "Sustainability Selection";
+    return "env";
 }
 
 SustainabilitySelection* SustainabilitySelection::clone() const {
