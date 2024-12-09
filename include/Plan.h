@@ -18,6 +18,8 @@ class Plan {
         Plan(const Plan& other);
         Plan(const Plan& other, const Settlement& otherSettlementClone);
         Plan(Plan&& other);
+        // Since it's logically wrong to assign an existing plan to another,
+        // based on a forum response we declared those methods as 'delete'.
         Plan& operator=(const Plan& other) = delete;
         Plan& operator=(const Plan&& other) = delete;
         ~Plan();

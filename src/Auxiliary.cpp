@@ -26,14 +26,14 @@ vector<string> Auxiliary::parseArguments(const string& line) {
     return arguments;
 }
 
-string Auxiliary::facilityStatusAsString (FacilityStatus status) {
+string Auxiliary::facilityStatusAsString (const FacilityStatus& status) {
     if (status == FacilityStatus::UNDER_CONSTRUCTIONS) return "UNDER_CONSTRUCTIONS";
     else if (status == FacilityStatus::OPERATIONAL) return "OPERATIONAL";
     cout << "INVALID facility status was given!" << endl;
     return "";
 }
 
-FacilityCategory Auxiliary::stringToFacilityCategory (string status) {
+FacilityCategory Auxiliary::stringToFacilityCategory (const string& status) {
     if (status == "0") {
         return FacilityCategory::LIFE_QUALITY;
     }
@@ -49,7 +49,7 @@ FacilityCategory Auxiliary::stringToFacilityCategory (string status) {
     return FacilityCategory::LIFE_QUALITY;
 }
 
-SettlementType Auxiliary::stringToSettlementType (string status) {
+SettlementType Auxiliary::stringToSettlementType (const string& status) {
     if (status == "0") return SettlementType::VILLAGE;
     else if (status == "1") return SettlementType::CITY;
     else if (status == "2") return SettlementType::METROPOLIS;
@@ -59,7 +59,7 @@ SettlementType Auxiliary::stringToSettlementType (string status) {
     return SettlementType::VILLAGE;
 }
 
-string Auxiliary::getPlanStatusAsString (PlanStatus status) {
+string Auxiliary::getPlanStatusAsString (const PlanStatus& status) {
     if (status == PlanStatus::BUSY) return "BUSY";
     else if (status == PlanStatus::AVALIABLE) return "AVALIABLE";
     // This section of code will never happen, assuming the config_file and the user input data is valid.
@@ -68,7 +68,7 @@ string Auxiliary::getPlanStatusAsString (PlanStatus status) {
     return "";
 }
 
-string Auxiliary:: settlementTypeToString(SettlementType type) {
+string Auxiliary:: settlementTypeToString(const SettlementType& type) {
     if(type == SettlementType:: VILLAGE) return "0";
     if(type == SettlementType:: CITY) return "1";
     if(type == SettlementType:: METROPOLIS) return "2";
@@ -78,7 +78,7 @@ string Auxiliary:: settlementTypeToString(SettlementType type) {
     return "";
 }
 
-int Auxiliary:: facilityCategoryToInt(FacilityCategory category) {
+int Auxiliary:: facilityCategoryToInt(const FacilityCategory& category) {
     if(category == FacilityCategory:: LIFE_QUALITY)
         return 0;
     else if(category == FacilityCategory:: ECONOMY)

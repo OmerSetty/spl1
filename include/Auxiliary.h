@@ -12,12 +12,12 @@ using std::vector;
 class Auxiliary{
     public:
         static vector<string> parseArguments(const string& line);
-        static string facilityStatusAsString(FacilityStatus status);
-        static FacilityCategory stringToFacilityCategory(string status);
-        static string facilityCategoryToString(FacilityCategory status);
-        static SettlementType stringToSettlementType(string status);
-        static string getPlanStatusAsString(PlanStatus status);
-        static string settlementTypeToString(SettlementType type);
-        static int facilityCategoryToInt(FacilityCategory category);
-        
+        static string facilityStatusAsString(const FacilityStatus& status);
+        static FacilityCategory stringToFacilityCategory(const string& status);
+        static string facilityCategoryToString(const FacilityCategory& status);
+        static SettlementType stringToSettlementType(const string& status);
+        static string getPlanStatusAsString(const PlanStatus& status);
+        static string settlementTypeToString(const SettlementType& type);
+        static int facilityCategoryToInt(const FacilityCategory& category);
+
 };

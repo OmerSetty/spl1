@@ -36,7 +36,7 @@ class Simulation {
         const bool getIsRunning() const;
         const int getPlanCounter() const;
         void step();
-        void addConfigObject(vector<string> parsedArgs);
+        void addConfigObject(vector<string>& parsedArgs);
         void close();
         void open();
         void printSimulationStatus();

@@ -9,7 +9,6 @@ all: run
 run: clean bin/simulation.o 
 	
 	g++ -o bin/simulation bin/main.o bin/Facility.o bin/Settlement.o bin/SelectionPolicy.o bin/Plan.o bin/Simulation.o bin/Auxiliary.o bin/Action.o
-	valgrind -s --leak-check=full --show-reachable=yes ./bin/simulation /workspaces/Skeleton/config_file.txt
 
 bin/simulation.o:
 

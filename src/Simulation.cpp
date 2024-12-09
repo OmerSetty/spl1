@@ -30,7 +30,7 @@ Simulation::Simulation(const string &configFilePath) : isRunning(false), planCou
 }
 
 // Adds the parsed arguments to the new simulation.
-void Simulation::addConfigObject(vector<string> parsedArgs) {
+void Simulation::addConfigObject(vector<string>& parsedArgs) {
     const string typeOfObject = parsedArgs[0];
     if (typeOfObject == "settlement") {
         addSettlement(new Settlement(parsedArgs[1], Auxiliary::stringToSettlementType(parsedArgs[2])));
