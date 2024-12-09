@@ -44,4 +44,4 @@ bin/main.o: src/main.cpp
 
 clean:
 
-	rm -f ./bin/*
+	rm -f bin/*
