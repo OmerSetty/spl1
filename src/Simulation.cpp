@@ -70,7 +70,6 @@ Simulation& Simulation:: operator=(const Simulation &other) {
         }
         settlements.clear();
         for (Settlement* settlement: other.getSettlements()) {
-            cout << settlement->getName() << endl;
             settlements.push_back(new Settlement(*settlement));
             // settlements.push_back(new Settlement((*settlement).getName(), (*settlement).getType()));
         }
@@ -198,7 +197,7 @@ void Simulation:: open() {
         vector<string> inputArguments = Auxiliary:: parseArguments(input);
         BaseAction* action;
         vector<string>& ia = inputArguments;
-        bool isPrintActionsLog = false;
+        bool isPrintActionsLog = false, isLegalAction = true;
         if(ia[0] == "step") {
             action = new SimulateStep(stoi(ia[1]));
         }
@@ -230,11 +229,18 @@ void Simulation:: open() {
         else if(ia[0] == "restore") {
             action = new RestoreSimulation();
         }
-        action->act(*this);
-        if(!isPrintActionsLog)
-            actionsLog.push_back(action);
+        else {
+            isLegalAction = false;
+        }
+        if (isLegalAction) {
+            action->act(*this);
+            if(!isPrintActionsLog)
+                actionsLog.push_back(action);
+            else
+                delete action;
+        }
         else
-            delete action;
+            cout << "INVALID ACTION!" << endl;
     }
 }
 

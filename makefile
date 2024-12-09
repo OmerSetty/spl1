@@ -3,25 +3,15 @@
 
 # All Targets
 
-all: hello
+all: run
 
 
-# Tool invocations
-
-# Executable "hello" depends on the files hello.o and run.o.
-
-
-hello: clean bin/main.o 
+run: clean bin/simulation.o 
 	
-	g++ -o bin/main bin/main.o bin/Facility.o bin/Settlement.o bin/SelectionPolicy.o bin/Plan.o bin/Simulation.o bin/Auxiliary.o bin/Action.o
-	
-	./bin/main /workspaces/Skeleton/config_file.txt
+	g++ -o bin/simulation bin/main.o bin/Facility.o bin/Settlement.o bin/SelectionPolicy.o bin/Plan.o bin/Simulation.o bin/Auxiliary.o bin/Action.o
+	valgrind -s --leak-check=full --show-reachable=yes ./bin/simulation /workspaces/Skeleton/config_file.txt
 
-	# valgrind -s --leak-check=full --show-reachable=yes ./bin/main /workspaces/Skeleton/config_file.txt
-
-# Depends on the source and header files
-
-bin/main.o: src/main.cpp
+bin/simulation.o:
 
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/main.o src/main.cpp
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Settlement.o src/Settlement.cpp
@@ -32,16 +22,5 @@ bin/main.o: src/main.cpp
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Auxiliary.o src/Auxiliary.cpp
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o bin/Action.o src/Action.cpp
 
-
-# Depends on the source and header files
-
-# : 
-
-#     g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude -o  
-
-
-#Clean the build directory
-
 clean:
-
 	rm -f bin/*

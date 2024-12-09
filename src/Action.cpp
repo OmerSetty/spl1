@@ -92,7 +92,7 @@ void AddPlan:: act(Simulation &simulation) {
             complete();
         }    
         else
-            error("did not get a leagal selectionPolicy. Check the config file");
+            error("Cannot create this plan");
     }
 }
 
@@ -148,7 +148,7 @@ void AddFacility:: act(Simulation &simulation) {
 }
 
 const string AddFacility:: toString() const {
-        return "facility" + facilityName + to_string(Auxiliary:: facilityCategoryToInt(facilityCategory)) + to_string(price) + to_string(lifeQualityScore) +to_string(economyScore) + to_string(environmentScore) + " " + actionStatusToString();
+    return "facility " + facilityName + " " + to_string(Auxiliary:: facilityCategoryToInt(facilityCategory)) + " " + to_string(price) + " " + to_string(lifeQualityScore) + " " +to_string(economyScore) + " " + to_string(environmentScore) + " " + actionStatusToString();
 }
 
 AddFacility* AddFacility:: clone() const {
@@ -200,7 +200,7 @@ const string PrintPlanStatus:: toString() const {
 
 // ChangePlanPolicy methods
 
-ChangePlanPolicy:: ChangePlanPolicy(const int planId, const string &newPolicy) : BaseAction(), planId(planId), newPolicy(newPolicy), prevPolicy(""){}
+ChangePlanPolicy:: ChangePlanPolicy(const int planId, const string &newPolicy) : BaseAction(), planId(planId), newPolicy(newPolicy) {}
 
 void ChangePlanPolicy:: act(Simulation &simulation) {
     if (!simulation.isPlanExists(planId)) {
@@ -208,6 +208,7 @@ void ChangePlanPolicy:: act(Simulation &simulation) {
         return;
     }
     Plan& plan = simulation.getPlan(planId);
+    string prevPolicy = plan.getSelectionPolicy().toString();
     if (prevPolicy == newPolicy) {
         error("Cannot change selection policy");
         return;
@@ -229,7 +230,6 @@ void ChangePlanPolicy:: act(Simulation &simulation) {
     }
     if (newPolicy == "nve" || newPolicy == "bal" || newPolicy == "eco" || newPolicy == "env") {
         cout << "PlanID: " + to_string(planId) + "\npreviousPolicy: " + prevPolicy + "\nnewPolicy: " + newPolicy << endl;
-        prevPolicy = newPolicy;
         complete();
     }
 }
@@ -239,7 +239,7 @@ ChangePlanPolicy* ChangePlanPolicy:: clone() const {
 }
 
 const string ChangePlanPolicy:: toString() const {
-    return "PlanID: " + to_string(planId) + "\npreviousPolicy: " + prevPolicy + "\nnewPolicy: " + newPolicy + " " + actionStatusToString();
+    return "changePolicy " + to_string(planId) + " newPolicy: " + newPolicy + " " + actionStatusToString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

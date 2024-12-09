@@ -29,6 +29,7 @@ vector<string> Auxiliary::parseArguments(const string& line) {
 string Auxiliary::facilityStatusAsString (FacilityStatus status) {
     if (status == FacilityStatus::UNDER_CONSTRUCTIONS) return "UNDER_CONSTRUCTIONS";
     else if (status == FacilityStatus::OPERATIONAL) return "OPERATIONAL";
+    cout << "INVALID facility status was given!" << endl;
     return "";
 }
 
@@ -42,9 +43,9 @@ FacilityCategory Auxiliary::stringToFacilityCategory (string status) {
     else if (status == "2") {
         return FacilityCategory::ENVIRONMENT;
     }
-    // This section of code will never happen, assuming the config_file data is valid.
+    // This section of code will never happen, assuming the config_file and the user input data is valid.
     // So we return an arbitrary FacilityCategory in order to return a value anyway
-    cout << "YOU WILL NEVER GET THIS! LALALALALALALALA! (stringToFacilityCategory)" << endl;
+    cout << "INVALID facility category status was given!" << endl;
     return FacilityCategory::LIFE_QUALITY;
 }
 
@@ -52,18 +53,18 @@ SettlementType Auxiliary::stringToSettlementType (string status) {
     if (status == "0") return SettlementType::VILLAGE;
     else if (status == "1") return SettlementType::CITY;
     else if (status == "2") return SettlementType::METROPOLIS;
-    // This section of code will never happen, assuming the config_file data is valid.
+    // This section of code will never happen, assuming the config_file and the user input data is valid.
     // So we return an arbitrary SettlementType in order to return a value anyway
-    cout << "YOU WILL NEVER GET THIS! LALALALALALALALA! (stringToSettlementType)" << endl;
+    cout << "INVALID settlement status was given!" << endl;
     return SettlementType::VILLAGE;
 }
 
 string Auxiliary::getPlanStatusAsString (PlanStatus status) {
     if (status == PlanStatus::BUSY) return "BUSY";
     else if (status == PlanStatus::AVALIABLE) return "AVALIABLE";
-    // This section of code will never happen, assuming the config_file data is valid.
+    // This section of code will never happen, assuming the config_file and the user input data is valid.
     // So we return an arbitrary string in order to return a value anyway
-    cout << "YOU WILL NEVER GET THIS! LALALALALALALALA! (getPlanStatusAsString)" << endl;
+    cout << "INVALID plan status was given!" << endl;
     return "";
 }
 
@@ -71,9 +72,9 @@ string Auxiliary:: settlementTypeToString(SettlementType type) {
     if(type == SettlementType:: VILLAGE) return "0";
     if(type == SettlementType:: CITY) return "1";
     if(type == SettlementType:: METROPOLIS) return "2";
-    // This section of code will never happen, assuming the config_file data is valid.
+    // This section of code will never happen, assuming the config_file and the user input data is valid.
     // So we return an arbitrary string in order to return a value anyway
-    cout << "YOU WILL NEVER GET THIS! LALALALALALALALA! (settlementTypeToString)" << endl;
+    cout << "INVALID settlement type was given!" << endl;
     return "";
 }
 
@@ -85,7 +86,7 @@ int Auxiliary:: facilityCategoryToInt(FacilityCategory category) {
     else if(category == FacilityCategory:: ENVIRONMENT)
         return 2;
     else {
-        cout << "No legal facilityCategory detected. output is 300. Check config file";
-        return 300;
+        cout << "INVALID facility category was given!" << endl;
+        return -1;
     }
 }

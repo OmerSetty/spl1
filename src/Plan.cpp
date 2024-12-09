@@ -31,21 +31,9 @@ Plan::Plan(const Plan& other) : plan_id(other.plan_id), settlement(other.settlem
             }
         }
 
-// replacement for the copy constructor - CLONES the other plan's settlement, indtead of creating a reference to it.
-// Plan::Plan(const Plan& other, const Settlement& otherSettlementClone) : plan_id(other.plan_id), settlement(otherSettlementClone), selectionPolicy(other.selectionPolicy->clone()), status(other.getStatus()),
-//         facilities(), underConstruction(), facilityOptions(other.facilityOptions), 
-//         life_quality_score(other.getlifeQualityScore()), economy_score(other.getEconomyScore()), environment_score(other.getEnvironmentScore()) {
-//             for (size_t i = 0; i < other.facilities.size(); i++) {
-//                 facilities.push_back(new Facility(*other.facilities[i]));
-//             }
-//             for (size_t i = 0; i < other.underConstruction.size(); i++) {
-//                 underConstruction.push_back(new Facility(*other.underConstruction[i]));
-//             }
-//         }
-
 // option 2
 Plan::Plan(const Plan& other, const Settlement& otherSettlementClone) :
-Plan(other.plan_id, otherSettlementClone, other.selectionPolicy, other.facilityOptions) {
+Plan(other.plan_id, otherSettlementClone, other.selectionPolicy->clone(), other.facilityOptions) {
     status = other.status;
     life_quality_score = other.life_quality_score;
     economy_score = other.economy_score;
